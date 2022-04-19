@@ -1,12 +1,12 @@
 
-
+@import url('https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&display=swap');
  body,
 		html {
 			margin: 0;
 			padding: 0;
 			height: 100%;
       background-color: #fff !important;
-	    font-family: 'Aref Ruqaa', serif
+	    font-family: 'Aref Ruqaa', serif;
 		}
 .social-media{
   color:#000 n !important;
@@ -42,6 +42,13 @@
 .show{
   left:0px;
 }
+.card_selection{
+  height: 820px;
+  width: 350px;
+  background: #fff;
+  justify-content: right;
+ 
+}
 		.user_card {
 			height: 400px;
 			width: 350px;
@@ -68,6 +75,7 @@
 			background: #37517e;
 			padding: 10px;
 			text-align: center;
+      font-family: "", sans-serif !important;
 		}
 		.brand_logo {
 			height: 150px;
@@ -112,7 +120,9 @@
 
 /* the end */
 
-
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Jost", sans-serif;
+}
 
 
 
@@ -4584,6 +4594,7 @@ input[type="button"].btn-block {
 }
 
 .card {
+  min-height: 200px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -4592,7 +4603,7 @@ input[type="button"].btn-block {
   background-color: #fff;
   background-clip: border-box;
   border: 1px solid rgba(0, 0, 0, 0.125);
-  border-radius: 0.25rem;
+ 
 }
 
 .card > hr {
@@ -4623,7 +4634,8 @@ input[type="button"].btn-block {
 }
 
 .card-body {
-  flex: 1 1 auto;
+  width: 300px;
+  height: 5;
   min-height: 1px;
   padding: 1.25rem;
 }
@@ -11287,7 +11299,7 @@ a.text-dark:hover, a.text-dark:focus {
   .rtl .pr-lg-5,
   [dir="rtl"] .pr-lg-5 {
     padding-right: 0 !important;
-   ` padding-left: 3rem !important;
+    padding-left: 3rem !important;
   }
   .rtl .pl-lg-5,
   [dir="rtl"] .pl-lg-5 {

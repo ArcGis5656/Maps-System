@@ -11,3 +11,14 @@ window.addEventListener('click', function(e){
  // document.getElementById("mySidenav").style.width = "0px";
   }
 });
+//sane hegit
+var theMax=0;
+$('.same-height div').each(
+  function(){
+    if($(this).height() > theMax){
+      theMax=$(this).height();
+    }
+  }
+);
+$('.same-height div').height(theMax);
+

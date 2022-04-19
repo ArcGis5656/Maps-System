@@ -1,4 +1,4 @@
-
+@import url('https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@300&display=swap');
 body {
  
   color: #fff;
@@ -15,7 +15,7 @@ a:hover {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Jost", sans-serif;
+  font-family: 'Tajawal', sans-serif;
 }
 
 body,
@@ -24,7 +24,7 @@ body,
 			padding: 0;
 			height: 100%;
       background-color: #fff !important;
-	    font-family: 'Aref Ruqaa', serif
+	    font-family: 'Tajawal', sans-serif;
 		}
     
     
@@ -419,7 +419,7 @@ body,
   font-size: 24px;
 }
 #hero .btn-get-started {
-  font-family: "Jost", sans-serif;
+  font-family: 'Tajawal', sans-serif;
   font-weight: 500;
   font-size: 16px;
   letter-spacing: 1px;
@@ -616,7 +616,7 @@ section {
   margin-bottom: 0;
 }
 .about .content .btn-learn-more {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Tajawal', sans-serif;;
   font-weight: 500;
   font-size: 14px;
   letter-spacing: 1px;
@@ -662,6 +662,7 @@ section {
   background-repeat: no-repeat;
   background-position: center center;
 }
+
 .why-us .accordion-list {
   padding: 0 100px 60px 100px;
 }
@@ -680,7 +681,7 @@ section {
 .why-us .accordion-list a {
   display: block;
   position: relative;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Tajawal', sans-serif;
   font-size: 16px;
   line-height: 24px;
   font-weight: 500;
@@ -749,7 +750,7 @@ section {
   font-weight: 700;
   font-size: 32px;
   color: #37517e;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Tajawal', sans-serif;
 }
 .skills .content ul {
   list-style: none;
@@ -778,7 +779,7 @@ section {
   text-transform: uppercase;
   display: block;
   font-weight: 600;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Tajawal', sans-serif;
   color: #37517e;
 }
 .skills .progress .skill .val {
@@ -851,7 +852,7 @@ section {
   color: #fff;
 }
 .cta .cta-btn {
-  font-family: "Jost", sans-serif;
+  font-family: 'Tajawal', sans-serif;
   font-weight: 500;
   font-size: 16px;
   letter-spacing: 1px;
@@ -898,7 +899,7 @@ section {
   transition: all 0.3s;
   padding: 8px 20px;
   border-radius: 50px;
-  font-family: "Poppins", sans-serif;
+  font-family:'Tajawal', sans-serif;
 }
 .portfolio #portfolio-flters li:hover, .portfolio #portfolio-flters li.filter-active {
   background: #47b2e4;
@@ -1118,7 +1119,7 @@ section {
   font-size: 48px;
   color: #37517e;
   font-weight: 400;
-  font-family: "Jost", sans-serif;
+  font-family: 'Tajawal', sans-serif;
   margin-bottom: 25px;
 }
 .pricing h4 sup {
@@ -1164,7 +1165,7 @@ section {
   transition: none;
   font-size: 16px;
   font-weight: 500;
-  font-family: "Jost", sans-serif;
+  font-family: 'Tajawal', sans-serif;
   transition: 0.3s;
   border: 1px solid #47b2e4;
 }
@@ -1223,7 +1224,7 @@ section {
 .faq .faq-list a {
   display: block;
   position: relative;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Tajawal', sans-serif;
   font-size: 16px;
   line-height: 24px;
   font-weight: 500;
@@ -1550,7 +1551,7 @@ section {
   font-size: 14px;
   line-height: 24px;
   margin-bottom: 0;
-  font-family: "Jost", sans-serif;
+  font-family: 'Tajawal', sans-serif;
   color: #5e5e5e;
 }
 #footer .footer-top h4 {
