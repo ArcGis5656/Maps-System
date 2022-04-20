@@ -8,49 +8,12 @@
         <link rel="stylesheet" href="../css/bootstrap-rtl.css">
         <link rel="stylesheet" href="../css/all.min.css">
         <link rel="stylesheet" href="../css/main.css">
-	    <title>موقع المعمل:</title>
+	    <title>موقع الثلاجة:</title>
     </head>
     <body>
-      <style>
-        .sidemod {
-            height: 100%;
-            width: 0;
-           position: absolute;
-            z-index: 1;
-            top: 0;
-            left: 0;
-            background-color: #0f0;
-            overflow-x: hidden;
-            transition: 0.5s;
-            padding-top: 60px;
-            direction: rtl;
-            text-align: right;
-          
-        }
-        
-        .sidemod a {
-            padding: 8px 8px 8px 32px;
-            text-decoration: none;
-            font-size: 25px;
-            color: #818181;
-            display: block;
-            transition: 0.3s;
-        }
-        </style>
-        <div id="mySidemod" class="sidemod">
-          <a href="#">About</a>
-          <a href="#">Services</a>
-          <a href="#">Clients</a>
-          <a href="#">Contact</a>
-        </div>
-        
-        <span style="font-size:30px;cursor:pointer" onclick="openmod()">&#9776; open</span>
-        <div class="display-flex justify-content-center float-start">
-          <button onclick="openLab('lab')">open Lab</button>
-        </div>
         <div class="row">
-            <div class="col-2 card_selection" id="lab" style="display: none;" >
-             <h5 style="text-align: right;">تحديد المعمل:</h5>
+            <div class="col-2 card_selection">
+             <h5 style="text-align: right;">تحديد الثلاجة:</h5>
               <div class="form-group">
                  <label style="color: black; float:right;">المحافظة:</label>
                  <select name="" id="" class="form-control">
