@@ -1,149 +1,247 @@
 <!DOCTYPE html>
-<html dir = "rtl" lang="ar">
-    <head>
-        <meta charset="utf-8"> <!--Character encoding for Unicode -->
-		<meta name="description" content="Website for farming of Yemen"><!-- describe the wibsite-->
-		<meta name="keyword" content="Farmaing , Maps ,GIS of Yemen,W"><!-- for search engines-->
-		<meta name="author" content="Karama Alnezari"><!-- about the author-->
-        <link rel="stylesheet" href="../css/bootstrap-rtl.css">
-        <link rel="stylesheet" href="../css/all.min.css">
-        <link rel="stylesheet" href="../css/main.css">
-	    <title>موقع المعمل:</title>
-    </head>
-    <body>
-      <style>
-        .sidemod {
-            height: 100%;
-            width: 0;
-           position: absolute;
-            z-index: 1;
-            top: 0;
-            left: 0;
-            background-color: #0f0;
-            overflow-x: hidden;
-            transition: 0.5s;
-            padding-top: 60px;
-            direction: rtl;
-            text-align: right;
-          
+<html>
+  <head>
+    <link href="../assets/vendor/aos/aos.css" rel="stylesheet" />
+    <link
+      href="../assets/vendor/bootstrap/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="../assets/vendor/bootstrap/css/bootstrap.rtl.css"
+      rel="stylesheet"
+    />
+    <link
+      href="../assets/vendor/bootstrap-icons/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/all.min.css" />
+   <title>خريطة نقاط البيع</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      .sidenav {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #37517e;
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+        color: #fff;
+      }
+
+      .sidenav a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: #fff;
+        display: block;
+        transition: 0.3s;
+        font-size: 15px;
+        text-align: right;
+      }
+
+      .sidenav a:hover {
+        color: #f1f1f1;
+      }
+
+      .sidenav .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+        float: left;
+        text-align: left;
+        margin-right: 180px;
+
+      }
+      .dd{
+          margin-right: 25px;
+      }
+      .dropdown-toggle{
+          direction: rtl;
+      }
+      .card_selection{
+          width: 200px;
+          margin-right: 0px;
+          direction: rtl;
+          position: end;
+      }
+
+      #main {
+        transition: margin-left 0.5s;
+        padding: 16px;
+      }
+
+      @media screen and (max-height: 450px) {
+        .sidenav {
+          padding-top: 15px;
         }
-        
-        .sidemod a {
-            padding: 8px 8px 8px 32px;
-            text-decoration: none;
-            font-size: 25px;
-            color: #818181;
-            display: block;
-            transition: 0.3s;
+
+        .sidenav a {
+          font-size: 18px;
         }
-        </style>
-        <div id="mySidemod" class="sidemod">
-          <a href="#">About</a>
-          <a href="#">Services</a>
-          <a href="#">Clients</a>
-          <a href="#">Contact</a>
-        </div>
+      }
+      /* /////////////////////////////////////// */
+    
+    </style>
+  </head>
+
+  <body>
+    <div id="mySidenav" class="sidenav">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+      <nav id="sidebar">
         
-        <span style="font-size:30px;cursor:pointer" onclick="openmod()">&#9776; open</span>
-        <div class="display-flex justify-content-center float-start">
-          <button onclick="openLab('lab')">open Lab</button>
-        </div>
-        <div class="row">
-            <div class="col-2 card_selection" id="lab" style="display: none;" >
-             <h5 style="text-align: right;">تحديد المعمل:</h5>
-              <div class="form-group">
-                 <label style="color: black; float:right;">المحافظة:</label>
-                 <select name="" id="" class="form-control">
-     
-                   <option>صنعاء</option> 
-                      <option>صعدة</option>
-                      <option>حجة</option>
-                      <option>حضرموت</option>
-                      <option>المحويت</option>
-                      <option>ذمار</option>
-                      <option>ريمه</option>
-                      <option>الحديدة</option>
-                      <option>الضالع</option>
-                      <option>المهرة</option>
-                      <option>أبين</option>
-                      <option>عدن</option> 
-                      <option>أب</option>
-                      <option>تعز</option>
-                      <option>سقطرى</option>
-                      <option>لحج</option>
-                      <option>البيضاء</option>
-                      <option>زبيد</option>
-                 </select>
-               </div>
-                 <div class="form-group">
-                   <label style="color: black ; float:right;">المديرية:</label>
-                   <select name="" id="" class="form-control">
-                     <option>1مديرية</option>
-                         <option>2مديرية</option>
-                         <option>3مديرية</option>
-                         <option>4مديرية</option>
-                         <option>5مديرية</option>
-                         <option>6مديرية</option>
-                         <option>7مديرية</option>
-                         <option>8مديرية</option>
-                         <option>9مديرية</option>
-                         <option>10مديرية</option>
-                   </select>
+
+        <ul class="list-unstyled components">
+           
+     <a href="../index.html"><p >الرئيسية</p></a> 
+            <li class="active">
+                <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">الأنتاج</a>
+                <ul class="collapse list-unstyled" id="homeSubmenu">
+                    <li>
+                        <a href="#" class="dd">خريطة الانتاج الزراعي </a>
+                    </li>
+                    <li>
+                        <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dd"> خريطة الانتاج الحيواني</a>
+                    </li>
+                </ul> 
+                <li>
+                <a href="#center-Submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">المراكز الخدمية </a>
+                <ul class="collapse list-unstyled" id="center-Submenu">
+                    <li>
+                        <a href="../pages/mapsOfMarket.html" class="dd">نقاط البيع  </a>
+                    </li
+                    <li>
+                        <a href="../pages/mapsOfdepot.html" class="dd">مستودعات </a>
+                    </li>
+                    <li>
+                        <a href="../pages/mapsOfFridge.html" class="dd">ثلاجات </a>
+                    </li>
+                    <li>
+                        <a href="../pages/mapsOflabs.html" class="dd">معامل  </a>
+                    </li>
                     
-                     <div class="form-group">
-                           
-                           
-                     <div class="form-group">
-                            
-                     </div>
-                     <div class="mt-4" style="text-align: center !important; ">
-                       <a href="pages/mapForProdect.html"><button class=" btn btn-primary">عرض</button></a> 
-                       <a href="#"><button type="button" class="btn btn-secondary">إلغاء</button></a>
-                   </div>
-              </div>
-           </div>
+                    <li>
+                        <a href="../pages/‏‏mapsOfworkshop.html" class="dd">ورش </a>
+                    </li>
+                    </ul> 
+                </li>
+                <li>
+                    <a href="#center-mange-Submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">المراكز الادارية </a>
+                    <ul class="collapse list-unstyled" id="center-mange-Submenu">
+                        <li>
+                            <a href="../pages/mapOfMangment-(Gover).html" class="dd">جمعيات  </a>
+                        </li
+                        <li>
+                            <a href="../pages/mapOfMangment-(union).html" class="dd">اتحادات </a>
+                        </li>
+                        <li>
+                       
+                        </ul> 
+                    </li>  
+            
+        </ul>
+    </nav>
+           
+    </div>
+
+    <div id="main">
+      <div class="row">
+        <div class="col-2">
+          <span style="font-size: 30px; cursor: pointer" onclick="openNav()"
+            >&#9776; </span>
+          
+        </div>
+        <div class="col-8">
+        <img src="../maps/Yeman2.svg" height="600" width="100%" alt="" />
+      </div>
+      <div class="col-2">
+        <i onclick="openLab('lab')" id="labButton" class="fas fa-angle-left" style=" color: #37517e; float: -2000px;"></i>
+             
+        <div class="card  card_selection" id="lab" style="display: none;margin-left: -213px;
+        margin-top: 42px;" >
+        <div class="card-header bg-white">
+            <h5 style="text-align: right;">تحديد نقاط البيع</h5>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+              <label style="color: black; float:right;">المحافظة</label>
+              <select name="" id="" class="form-control float-right"  style="direction: rtl;">
+  
+                <option>صنعاء</option> 
+                   <option>صعدة</option>
+                   <option>حجة</option>
+                   <option>حضرموت</option>
+                   <option>المحويت</option>
+                   <option>ذمار</option>
+                   <option>ريمه</option>
+                   <option>الحديدة</option>
+                   <option>الضالع</option>
+                   <option>المهرة</option>
+                   <option>أبين</option>
+                   <option>عدن</option> 
+                   <option>أب</option>
+                   <option>تعز</option>
+                   <option>سقطرى</option>
+                   <option>لحج</option>
+                   <option>البيضاء</option>
+                   <option>زبيد</option>
+              </select>
             </div>
-         <div class="col-8">
-           <img src="../maps/Yeman2.svg" alt="">
-         </div>
-         <div id="mySidenav" class="sidenav" style="direction: rtl!important;text-align: right  !important;">
-                
-           <div>
-              <nav id="navbar" class="navbar">
-               <ul>
-                 <li><a class="nav-link scrollto active" href="../index.html">الرئيسية</a></li>
-                 <li class="dropdown"><a href="#"><span> خريطة الأنتاج </span><i class="bi bi-chevron-down"></i></a>
-                   <ul>
-                     <li><div type="text" class="" data-toggle="modal" data-target="#exampleModal" style="color: black !important;"><a href="../pages/mapForProdect.html"><span>الأنتاج الزراعي</span></a></div></li>
-                     <li><div type="text" class="" data-toggle="modal" data-target="#exampleModal-animal" style="color: black !important;"><a href="../pages/mapOfanimalsProdact.html"><span>الأنتاج الحيواني</span></a></div></li>        
-                   </ul>
-                 </li>
-                 <li class="dropdown"><a href="#"><span> خريطة المراكز الخدمية </span> <i class="bi bi-chevron-down"></i></a>
-                   <ul>
-                     <li><div type="text" class="" data-toggle="modal" data-target="#exampleModal-market" style="color: black !important;"><a href="../pages/mapsOfMarket.html"><span>نقاط البيع</span></a></div></li>
-                     <li><div type="text" class="" data-toggle="modal" data-target="#exampleModal-depot" style="color: black !important;"><a href="../pages/mapsOfdepot.html"><span>المستودعات و الثلاجات</span></a></div></li>
-                     <li><div type="text" class="" data-toggle="modal" data-target="#exampleModal-lab" style="color: black !important;"><a href="../pages/mapsOflabs.html"><span>المعامل والرورش</span></a></div></li> 
-                   </ul>
-               </li>   
-               <li class="dropdown"><a href="#"><span>  خريطة المراكز الاأدارية </span> <i class="bi bi-chevron-down"></i></a>
-                 <ul>
-                     <li><div type="text" class="" data-toggle="modal" data-target="#exampleModal-assembly" style="color: black !important;"><a href="../pages/mapOfMangment-(Gover).html"><span>الجمعيات</span></a></div></li> 
-                     <li><div type="text" class="" data-toggle="modal" data-target="#exampleModal-union" style="color: black !important;"><a href="../pages/mapOfMangment-(union).html"><span>الاتحادات</span></a></div></li>     
-                 </ul>
-           </li>
-               </ul>
-               <i class="bi bi-list mobile-nav-toggle"></i>
-             </nav>
-          </div>
+              <div class="form-group">
+                <label style="color: black ; float:right;">المديرية</label>
+                <select name="" id="" class="form-control"  style="direction: rtl;">
+                  <option>1مديرية</option>
+                      <option>2مديرية</option>
+                      <option>3مديرية</option>
+                      <option>4مديرية</option>
+                      <option>5مديرية</option>
+                      <option>6مديرية</option>
+                      <option>7مديرية</option>
+                      <option>8مديرية</option>
+                      <option>9مديرية</option>
+                      <option>10مديرية</option>
+                </select>
            </div>
-           <div class="col-1">
-           <span style="font-size:30px;cursor:pointer" id="myMenu" onclick="openNav()">
-             <i class="fa-solid fa-bars" style="color:#37517e; margin-top:10px;margin-left: 10px ;margin-bottom: 100px;"></i>
-          </div>
-        <script src="../js/popper.min.js"></script>
-        <script src="../js/jquery-3.6.0.min.js"></script>
-        <script src="../js/bootstrap.js"></script>
-        <script src="../js/all.min.js"></script>
-        <script src="../js/slider.js"></script>
-    </body>
+        </div>
+        <div class="card-footer bg-white">
+          <div class="mt-4" style="text-align: center !important; ">
+              <a href="#"><button class=" btn btn-primary">عرض</button></a> 
+              <a href="#"><button type="button" onclick="closeLab('lab')" class="btn btn-secondary">إلغاء</button></a>
+        
+            </div>
+        </div>
+      
+         </div>
+      </div>
+    </div>
+
+    <script>
+      function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+        document.getElementById("main").style.marginLeft = "250px";
+        document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+      }
+
+      function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+        document.getElementById("main").style.marginLeft = "0";
+        document.body.style.backgroundColor = "white";
+      }
+    </script>
+    
+    <script src="../js/popper.min.js"></script>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script src="../js/bootstrap.js"></script>
+    <script src="../js/jquery.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/slider.js"></script>
+  
+  </body>
 </html>

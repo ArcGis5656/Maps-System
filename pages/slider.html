@@ -16,6 +16,7 @@
     />
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
     <link rel="stylesheet" href="../css/all.min.css" />
+   
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       .sidenav {
@@ -25,19 +26,22 @@
         z-index: 1;
         top: 0;
         left: 0;
-        background-color: #111;
+        background-color: #37517e;
         overflow-x: hidden;
         transition: 0.5s;
         padding-top: 60px;
+        color: #fff;
       }
 
       .sidenav a {
         padding: 8px 8px 8px 32px;
         text-decoration: none;
         font-size: 25px;
-        color: #818181;
+        color: #fff;
         display: block;
         transition: 0.3s;
+        font-size: 15px;
+        text-align: right;
       }
 
       .sidenav a:hover {
@@ -50,6 +54,22 @@
         right: 25px;
         font-size: 36px;
         margin-left: 50px;
+        float: left;
+        text-align: left;
+        margin-right: 180px;
+
+      }
+      .dd{
+          margin-right: 25px;
+      }
+      .dropdown-toggle{
+          direction: rtl;
+      }
+      .card_selection{
+          width: 200px;
+          margin-right: 0px;
+          direction: rtl;
+          position: end;
       }
 
       #main {
@@ -73,45 +93,41 @@
 
   <body>
     <div id="mySidenav" class="sidenav">
-      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"
-        >&times;</a
-      >
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
       <nav id="sidebar">
-        <div class="sidebar-header">
-            <h3>الخرائط</h3>
-        </div>
+        
 
         <ul class="list-unstyled components">
            
-            <<a href="../index.html"><p >الرئيسية</p></a> 
+     <a href="../index.html"><p >الرئيسية</p></a> 
             <li class="active">
                 <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">الأنتاج</a>
                 <ul class="collapse list-unstyled" id="homeSubmenu">
                     <li>
-                        <a href="#">خريطة الانتاج الزراعي </a>
+                        <a href="../pages/mapForProdect.html" class="dd">خريطة الانتاج الزراعي </a>
                     </li>
                     <li>
-                        <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class=""> خريطة الانتاج الحيواني</a>
+                        <a href="../pages/mapOfanimalsProdact.html" data-toggle="collapse" aria-expanded="false" class="dd"> خريطة الانتاج الحيواني</a>
                     </li>
                 </ul> 
                 <li>
                 <a href="#center-Submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">المراكز الخدمية </a>
                 <ul class="collapse list-unstyled" id="center-Submenu">
                     <li>
-                        <a href="../pages/mapsOfMarket.html">نقاط البيع  </a>
+                        <a href="../pages/mapsOfMarket.html" class="dd">نقاط البيع  </a>
                     </li
                     <li>
-                        <a href="../pages/mapsOfdepot.html">مستودعات </a>
+                        <a href="../pages/mapsOfdepot.html" class="dd">مستودعات </a>
                     </li>
                     <li>
-                        <a href="../pages/mapsOfFridge.html">ثلاجات </a>
+                        <a href="../pages/mapsOfFridge.html" class="dd">ثلاجات </a>
                     </li>
                     <li>
-                        <a href="../pages/mapsOflabs.html">معامل  </a>
+                        <a href="../pages/mapsOflabs.html" class="dd">معامل  </a>
                     </li>
                     
                     <li>
-                        <a href="../pages/‏‏mapsOfworkshop.html">ورش </a>
+                        <a href="../pages/‏‏mapsOfworkshop.html" class="dd">ورش </a>
                     </li>
                     </ul> 
                 </li>
@@ -119,10 +135,10 @@
                     <a href="#center-mange-Submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">المراكز الادارية </a>
                     <ul class="collapse list-unstyled" id="center-mange-Submenu">
                         <li>
-                            <a href="../pages/mapOfMangment-(Gover).html">جمعيات  </a>
+                            <a href="../pages/mapOfMangment-(Gover).html" class="dd">جمعيات  </a>
                         </li
                         <li>
-                            <a href="../pages/mapOfMangment-(union).html">اتحادات </a>
+                            <a href="../pages/mapOfMangment-(union).html" class="dd">اتحادات </a>
                         </li>
                         <li>
                        
@@ -138,16 +154,16 @@
       <div class="row">
         <div class="col-2">
           <span style="font-size: 30px; cursor: pointer" onclick="openNav()"
-            >&#9776; open</span
-          >
+            >&#9776; </span>
+          
         </div>
         <div class="col-8">
         <img src="../maps/Yeman2.svg" height="600" width="100%" alt="" />
       </div>
       <div class="col-2">
-        <button onclick="openLab('lab')" id="labButton" class="fas fa-angle-left">oprn lap</button>
+        <i onclick="openLab('lab')" id="labButton" class="fas fa-angle-left" style=" color: #37517e; float: -2000px;"></i>
              
-        <div class="card " id="lab" style="display: none;margin-left: -213px;
+        <div class="card  card_selection" id="lab" style="display: none;margin-left: -213px;
         margin-top: 42px;" >
         <div class="card-header bg-white">
             <h5 style="text-align: right;">تحديد المعمل</h5>
@@ -195,7 +211,7 @@
         </div>
         <div class="card-footer bg-white">
           <div class="mt-4" style="text-align: center !important; ">
-              <a href="pages/mapForProdect.html"><button class=" btn btn-primary">عرض</button></a> 
+              <a href="#"><button class=" btn btn-primary">عرض</button></a> 
               <a href="#"><button type="button" onclick="closeLab('lab')" class="btn btn-secondary">إلغاء</button></a>
         
             </div>
