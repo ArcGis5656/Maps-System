@@ -1,6 +1,6 @@
-function openNav() {
-  document.getElementById("mySidenav").style.width = "250px";
-}
+// function openNav() {
+//   document.getElementById("mySidenav").style.width = "250px";
+// }
 
 //sane hegit
 var theMax = 0;
@@ -17,9 +17,9 @@ function openLab($id) {
     document.getElementById("labButton").style.display = "none";
   }
 }
-// function openLab() {
-//   document.getElementById("$id").style.width = "250px";
-// }
+function openLab() {
+  document.getElementById("$id").style.width = "250px";
+}
 
 $(document).ready(function () {
   $("#sidebarCollapse").on("click", function () {

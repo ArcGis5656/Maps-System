@@ -66,6 +66,8 @@
           font-size: 18px;
         }
       }
+      /* /////////////////////////////////////// */
+    
     </style>
   </head>
 
@@ -74,10 +76,62 @@
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"
         >&times;</a
       >
-      <a href="#">About</a>
-      <a href="#">Services</a>
-      <a href="#">Clients</a>
-      <a href="#">Contact</a>
+      <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3>الخرائط</h3>
+        </div>
+
+        <ul class="list-unstyled components">
+           
+            <<a href="../index.html"><p >الرئيسية</p></a> 
+            <li class="active">
+                <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">الأنتاج</a>
+                <ul class="collapse list-unstyled" id="homeSubmenu">
+                    <li>
+                        <a href="#">خريطة الانتاج الزراعي </a>
+                    </li>
+                    <li>
+                        <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class=""> خريطة الانتاج الحيواني</a>
+                    </li>
+                </ul> 
+                <li>
+                <a href="#center-Submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">المراكز الخدمية </a>
+                <ul class="collapse list-unstyled" id="center-Submenu">
+                    <li>
+                        <a href="../pages/mapsOfMarket.html">نقاط البيع  </a>
+                    </li
+                    <li>
+                        <a href="../pages/mapsOfdepot.html">مستودعات </a>
+                    </li>
+                    <li>
+                        <a href="../pages/mapsOfFridge.html">ثلاجات </a>
+                    </li>
+                    <li>
+                        <a href="../pages/mapsOflabs.html">معامل  </a>
+                    </li>
+                    
+                    <li>
+                        <a href="../pages/‏‏mapsOfworkshop.html">ورش </a>
+                    </li>
+                    </ul> 
+                </li>
+                <li>
+                    <a href="#center-mange-Submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">المراكز الادارية </a>
+                    <ul class="collapse list-unstyled" id="center-mange-Submenu">
+                        <li>
+                            <a href="../pages/mapOfMangment-(Gover).html">جمعيات  </a>
+                        </li
+                        <li>
+                            <a href="../pages/mapOfMangment-(union).html">اتحادات </a>
+                        </li>
+                        <li>
+                       
+                        </ul> 
+                    </li>  
+            
+        </ul>
+    </nav>
+           
     </div>
 
     <div id="main">
@@ -114,5 +168,14 @@
         document.body.style.backgroundColor = "white";
       }
     </script>
+    
+    <script src="../js/popper.min.js"></script>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script src="../js/bootstrap.js"></script>
+    <script src="../js/jquery.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/slider.js"></script>
+  
   </body>
 </html>
