@@ -30,13 +30,13 @@ function openmod() {
   document.getElementById("mySidemod").style.width = "250px";
 }
 
-function openLab($id){
-   document.getElementById($id).style.display='block';
+function openLab(){
+   document.getElementById('lab').style.display='block';
    document.getElementById('labButton').style.display='none';
 }
-function openLab() {
-  document.getElementById("$id").style.width = "250px";
-}
+// function openLab() {
+//   document.getElementById("$id").style.width = "250px";
+// }
 
 $(document).ready(function () {
 
