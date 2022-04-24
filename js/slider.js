@@ -12,14 +12,17 @@ $(".same-height div").each(function () {
 $(".same-height div").height(theMax);
 
 function openLab($id) {
-  if ($id == "lab") {
-    document.getElementById($id).style.display = "block";
-    document.getElementById("labButton").style.display = "none";
-  }
+  document.getElementById($id).style.display = "block";
+  document.getElementById("labButton").style.display = "none";
 }
-function openLab() {
-  document.getElementById("$id").style.width = "250px";
+function closeLab($id) {
+  document.getElementById($id).style.display = "none";
+  document.getElementById("labButton").style.display = "block";
 }
+
+// function openLab() {
+//   document.getElementById("$id").style.width = "250px";
+// }
 
 $(document).ready(function () {
   $("#sidebarCollapse").on("click", function () {

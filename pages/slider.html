@@ -15,7 +15,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
-    <link rel="stylesheet" href="../../css/all.min.css" />
+    <link rel="stylesheet" href="../css/all.min.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       .sidenav {
@@ -145,13 +145,63 @@
         <img src="../maps/Yeman2.svg" height="600" width="100%" alt="" />
       </div>
       <div class="col-2">
-        <button
-          onclick="openLab('lab')"
-          id="labButton"
-          class="fa-solid fa-angle-left"
-        >
-          oprn lap
-        </button>
+        <button onclick="openLab('lab')" id="labButton" class="fas fa-angle-left">oprn lap</button>
+             
+        <div class="card " id="lab" style="display: none;margin-left: -213px;
+        margin-top: 42px;" >
+        <div class="card-header bg-white">
+            <h5 style="text-align: right;">تحديد المعمل</h5>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+              <label style="color: black; float:right;">المحافظة</label>
+              <select name="" id="" class="form-control float-right"  style="direction: rtl;">
+  
+                <option>صنعاء</option> 
+                   <option>صعدة</option>
+                   <option>حجة</option>
+                   <option>حضرموت</option>
+                   <option>المحويت</option>
+                   <option>ذمار</option>
+                   <option>ريمه</option>
+                   <option>الحديدة</option>
+                   <option>الضالع</option>
+                   <option>المهرة</option>
+                   <option>أبين</option>
+                   <option>عدن</option> 
+                   <option>أب</option>
+                   <option>تعز</option>
+                   <option>سقطرى</option>
+                   <option>لحج</option>
+                   <option>البيضاء</option>
+                   <option>زبيد</option>
+              </select>
+            </div>
+              <div class="form-group">
+                <label style="color: black ; float:right;">المديرية</label>
+                <select name="" id="" class="form-control"  style="direction: rtl;">
+                  <option>1مديرية</option>
+                      <option>2مديرية</option>
+                      <option>3مديرية</option>
+                      <option>4مديرية</option>
+                      <option>5مديرية</option>
+                      <option>6مديرية</option>
+                      <option>7مديرية</option>
+                      <option>8مديرية</option>
+                      <option>9مديرية</option>
+                      <option>10مديرية</option>
+                </select>
+           </div>
+        </div>
+        <div class="card-footer bg-white">
+          <div class="mt-4" style="text-align: center !important; ">
+              <a href="pages/mapForProdect.html"><button class=" btn btn-primary">عرض</button></a> 
+              <a href="#"><button type="button" onclick="closeLab('lab')" class="btn btn-secondary">إلغاء</button></a>
+        
+            </div>
+        </div>
+      
+         </div>
       </div>
     </div>
 
