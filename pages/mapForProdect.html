@@ -1,152 +1,273 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="ar">
-  <head>
-    <meta charset="utf-8" /><!--Character encoding for Unicode -->
-    <meta name="description" content="Website for farming of Yemen" /><!-- describe the wibsite-->
-    <meta name="keyword" content="Farmaing , Maps ,GIS of Yemen,W" /><!-- for search engines-->
-    <meta name="author" content="Karama Alnezari" /><!-- about the author-->
-    <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
-     <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../assets/vendor/bootstrap/css/bootstrap.rtl.css" rel="stylesheet">
-    <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/bootstrap-rtl.css" />
-    <link rel="stylesheet" href="../css/all.min.css">
-    <link rel="stylesheet" href="../css/main.css">
-    <title>خريطة الانتاج الزراعي للجمهورية اليمنية</title>
-  </head>
-  <body>
-    <div class="row">
-       <div class="col-2 card_selection">
-        <h5 style="text-align: right;"> تحديد نوع الأرض: </h5>
-         <div class="form-group">
-            <label style="color: black; float:right;">المحافظة:</label>
-            <select name="" id="" class="form-control">
+<html>
 
-              <option>صنعاء</option> 
-                 <option>صعدة</option>
-                 <option>حجة</option>
-                 <option>حضرموت</option>
-                 <option>المحويت</option>
-                 <option>ذمار</option>
-                 <option>ريمه</option>
-                 <option>الحديدة</option>
-                 <option>الضالع</option>
-                 <option>المهرة</option>
-                 <option>أبين</option>
-                 <option>عدن</option> 
-                 <option>أب</option>
-                 <option>تعز</option>
-                 <option>سقطرى</option>
-                 <option>لحج</option>
-                 <option>البيضاء</option>
-                 <option>زبيد</option>
-            </select>
-          </div>
-            <div class="form-group">
-              <label style="color: black ; float:right;">المديرية:</label>
-              <select name="" id="" class="form-control">
-                <option>1مديرية</option>
-                    <option>2مديرية</option>
-                    <option>3مديرية</option>
-                    <option>4مديرية</option>
-                    <option>5مديرية</option>
-                    <option>6مديرية</option>
-                    <option>7مديرية</option>
-                    <option>8مديرية</option>
-                    <option>9مديرية</option>
-                    <option>10مديرية</option>
-              </select>
-               
-                <div class="form-group">
-                      <label style="color: black; float:right;">نوع الأرض:</label>
-                      <select name="" id="" class="form-control">
-                            <option>صالح لزراعة(مستزرع)</option>
-                            <option>صالح لزراعة (غير مستزرع)</option>
-                            <option>غير صالح لزراعة </option>
-                      </select>
-                      
-                <div class="form-group">
-                      <label style="color: black; float:right;">المنتج:</label>
-                      <select name="" id="" class="form-control">
-                            <option>منتج1 </option>
-                            <option>منتج1 </option>
-                            <option>منتج1 </option>
-                            <option>منتج1 </option>
-                            <option>منتج1 </option>
-                            <option>منتج1 </option>
-                            <option>منتج1 </option>
-                            <option>منتج1 </option>
-                            <option>منتج1 </option>
-                            <option>منتج1 </option>
-                            <option>منتج1 </option>
-                            <option>منتج1 </option>
-                            <option>منتج1 </option>
-                            <option>منتج1 </option>
-                            <option>منتج1 </option>
-                            <option>منتج1 </option>
-                            <option>منتج1 </option>
-                            <option>منتج1 </option>
-                            <option>منتج1 </option>
-                      </select> 
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>خريطة الأنتاج الزراعي</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+<style>
+    .wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+
+#sidebar.active {
+    margin-left: -250px;
+}
+#sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    min-height: 100vh;
+}
+a[data-toggle="collapse"] {
+    position: relative;
+}
+
+.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+}
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: -250px;
+    }
+    #sidebar.active {
+        margin-left: 0;
+    }
+}
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #fafafa;
+}
+
+p {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: #999;
+}
+
+a, a:hover, a:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+#sidebar {
+    /* don't forget to add all the previously mentioned styles here too */
+    background: #7386D5;
+    color: #fff;
+    transition: all 0.3s;
+}
+
+#sidebar .sidebar-header {
+    padding: 20px;
+    background: #6d7fcc;
+}
+
+#sidebar ul.components {
+    padding: 20px 0;
+    border-bottom: 1px solid #47748b;
+}
+
+#sidebar ul p {
+    color: #fff;
+    padding: 10px;
+}
+
+#sidebar ul li a {
+    padding: 10px;
+    font-size: 1.1em;
+    display: block;
+}
+#sidebar ul li a:hover {
+    color: #7386D5;
+    background: #fff;
+}
+
+#sidebar ul li.active > a, a[aria-expanded="true"] {
+    color: #fff;
+    background: #333540;
+}
+ul ul a {
+    font-size: 0.9em !important;
+    padding-left: 30px !important;
+    background: #6d7fcc;
+}
+</style>
+
+</head>
+
+<body>
+    <div class="row">
+        <div class="wrapper">
+            <!-- Sidebar -->
+            <nav id="sidebar">
+                <div class="sidebar-header">
+                    <h3>الخرائط</h3>
                 </div>
-                <div class="mt-4" style="text-align: center !important; ">
-                  <a href="pages/mapForProdect.html"><button class=" btn btn-primary">عرض</button></a> 
-                  <a href="#"><button type="button" class="btn btn-secondary">إلغاء</button></a>
+        
+                <ul class="list-unstyled components">
+                   
+                    <<a href="../index.html"><p >الرئيسية</p></a> 
+                    <li class="active">
+                        <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">الأنتاج</a>
+                        <ul class="collapse list-unstyled" id="homeSubmenu">
+                            <li>
+                                <a href="#">خريطة الانتاج الزراعي </a>
+                            </li>
+                            <li>
+                                <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class=""> خريطة الانتاج الحيواني</a>
+                            </li>
+                        </ul> 
+                        <li>
+                        <a href="#center-Submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">المراكز الخدمية </a>
+                        <ul class="collapse list-unstyled" id="center-Submenu">
+                            <li>
+                                <a href="../pages/mapsOfMarket.html">نقاط البيع  </a>
+                            </li
+                            <li>
+                                <a href="../pages/mapsOfdepot.html">مستودعات </a>
+                            </li>
+                            <li>
+                                <a href="../pages/mapsOfFridge.html">ثلاجات </a>
+                            </li>
+                            <li>
+                                <a href="../pages/mapsOflabs.html">معامل  </a>
+                            </li>
+                            
+                            <li>
+                                <a href="../pages/‏‏mapsOfworkshop.html">ورش </a>
+                            </li>
+                            </ul> 
+                        </li>
+                        <li>
+                            <a href="#center-mange-Submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">المراكز الادارية </a>
+                            <ul class="collapse list-unstyled" id="center-mange-Submenu">
+                                <li>
+                                    <a href="../pages/mapOfMangment-(Gover).html">جمعيات  </a>
+                                </li
+                                <li>
+                                    <a href="../pages/mapOfMangment-(union).html">اتحادات </a>
+                                </li>
+                                <li>
+                               
+                                </ul> 
+                            </li>  
+                    
+                </ul>
+            </nav>
+                        
+                   
+                
+            <div id="content">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <div class="container-fluid">
+            
+                        <div type="button" id="sidebarCollapse" class="btn btn-info">
+                            <i class="fas fa-align-left"></i>
+                            <span>شريط القوائم</span>
+                        </div>
+            
+                    </div>
+                </nav>
+                
+            </div>
+            <div class="col-8">
+                <img src="../maps/Yeman2.svg" alt="">
               </div>
-         </div>
-      </div>
-       </div>
-    <div class="col-8">
-      <img src="../maps/Yeman2.svg" alt="">
+              <div class=" m-3 float-right" style="margin-top:20% !important;">
+                <button onclick="myFunction()">Click me</button>
+            <!--<button onclick="openLab('lab')" id="labButton" class="fa-solid fa-angle-left">oprn lap</button>-->
+              </div>
+              <div class="col-2 card " id="lab" style="display: none;margin-left: -213px;
+              margin-top: 42px;" >
+              <div class="card-header bg-white">
+                  <h5 style="text-align: right;">تحديد المعمل</h5>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                    <label style="color: black; float:right;">المحافظة</label>
+                    <select name="" id="" class="form-control float-right"  style="direction: rtl;">
+        
+                      <option>صنعاء</option> 
+                         <option>صعدة</option>
+                         <option>حجة</option>
+                         <option>حضرموت</option>
+                         <option>المحويت</option>
+                         <option>ذمار</option>
+                         <option>ريمه</option>
+                         <option>الحديدة</option>
+                         <option>الضالع</option>
+                         <option>المهرة</option>
+                         <option>أبين</option>
+                         <option>عدن</option> 
+                         <option>أب</option>
+                         <option>تعز</option>
+                         <option>سقطرى</option>
+                         <option>لحج</option>
+                         <option>البيضاء</option>
+                         <option>زبيد</option>
+                    </select>
+                  </div>
+                    <div class="form-group">
+                      <label style="color: black ; float:right;">المديرية</label>
+                      <select name="" id="" class="form-control"  style="direction: rtl;">
+                        <option>1مديرية</option>
+                            <option>2مديرية</option>
+                            <option>3مديرية</option>
+                            <option>4مديرية</option>
+                            <option>5مديرية</option>
+                            <option>6مديرية</option>
+                            <option>7مديرية</option>
+                            <option>8مديرية</option>
+                            <option>9مديرية</option>
+                            <option>10مديرية</option>
+                      </select>
+                 </div>
+              </div>
+              <div class="card-footer bg-white">
+                <div class="mt-4" style="text-align: center !important; ">
+                    <a href="pages/mapForProdect.html"><button class=" btn btn-primary">عرض</button></a> 
+                    <a href="#"><button type="button" class="btn btn-secondary">إلغاء</button></a>
+              
+                  </div>
+              </div>
+            
+               </div>
+        </div>
     </div>
-    <div id="mySidenav" class="sidenav" style="direction: rtl!important;text-align: right  !important;">
-           
-      <div>
-         <nav id="navbar" class="navbar">
-          <ul>
-            <li><a class="nav-link scrollto active" href="../index.html">الرئيسية</a></li>
-            <li class="dropdown"><a href="#"><span> خريطة الأنتاج </span><i class="bi bi-chevron-down"></i></a>
-              <ul>
-                <li><div type="text" class="" data-toggle="modal" data-target="#exampleModal" style="color: black !important;"><a href="../pages/mapForProdect.html"><span>الأنتاج الزراعي</span></a></div></li>
-                <li><div type="text" class="" data-toggle="modal" data-target="#exampleModal-animal" style="color: black !important;"><a href="../pages/mapOfanimalsProdact.html"><span>الأنتاج الحيواني</span></a></div></li>        
-              </ul>
-            </li>
-            <li class="dropdown"><a href="#"><span> خريطة المراكز الخدمية </span> <i class="bi bi-chevron-down"></i></a>
-              <ul>
-                <li><div type="text" class="" data-toggle="modal" data-target="#exampleModal-market" style="color: black !important;"><a href="../pages/mapsOfMarket.html"><span>نقاط البيع</span></a></div></li>
-                <li><div type="text" class="" data-toggle="modal" data-target="#exampleModal-depot" style="color: black !important;"><a href="../pages/mapsOfdepot.html"><span>المستودعات و الثلاجات</span></a></div></li>
-                <li><div type="text" class="" data-toggle="modal" data-target="#exampleModal-lab" style="color: black !important;"><a href="../pages/mapsOflabs.html"><span>المعامل والرورش</span></a></div></li> 
-              </ul>
-          </li>   
-          <li class="dropdown"><a href="#"><span>  خريطة المراكز الاأدارية </span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-                <li><div type="text" class="" data-toggle="modal" data-target="#exampleModal-assembly" style="color: black !important;"><a href="../pages/mapOfMangment-(Gover).html"><span>الجمعيات</span></a></div></li> 
-                <li><div type="text" class="" data-toggle="modal" data-target="#exampleModal-union" style="color: black !important;"><a href="../pages/mapOfMangment-(union).html"><span>الاتحادات</span></a></div></li>     
-            </ul>
-      </li>
-          </ul>
-          <i class="bi bi-list mobile-nav-toggle"></i>
-        </nav>
-     </div>
-      </div>
-      <div class="col-1">
-      <span style="font-size:30px;cursor:pointer" id="myMenu" onclick="openNav()">
-        <i class="fa-solid fa-bars" style="color:#37517e; margin-top:10px;margin-left: 10px ;margin-bottom: 100px;"></i>
-     </div>
+    
+
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script >
+       
+    </script>
+     <script src="../js/slider.js"></script>
      
-    <script src="../assets/vendor/aos/aos.js"></script>
-    <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
-    <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-    <script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
-    <script src="../assets/vendor/waypoints/noframework.waypoints.js"></script>
-    <script src="../assets/vendor/php-email-form/validate.js"></script>
-    <script src="../js/popper.min.js"></script>
-    <script src="../js/jquery-3.6.0.min.js"></script>
-    <script src="../js/bootstrap.js"></script>
-    <script src="../js/all.min.js"></script>
-    <script src="../js/slider.js"></script>
-    <script src="..js/main.js"></script>
-  </body>
+</body>
+
 </html>
