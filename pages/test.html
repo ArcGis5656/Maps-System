@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+<html dir="rtl"lang="ar">
+    
   <head>
     <link href="../assets/vendor/aos/aos.css" rel="stylesheet" />
     <link
@@ -15,12 +16,81 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/bootstrap-rtl.css">
     <link rel="stylesheet" href="../css/all.min.css" />
    
-
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>خريطة الجمعيات</title>
     <style>
+      .selectbar {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        background-color: #37517e;
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+        color: #fff;
+        direction: rtl;
+        
+
+      }
+
+      .selectbar a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: #fff;
+        display: block;
+        transition: 0.3s;
+        font-size: 15px;
+        text-align: right;
+      }
+
+      .selectbar a:hover {
+        color: #f1f1f1;
+      }
+
+      .selectbar .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+        float: left;
+        text-align: left;
+        margin-right: 180px;
+
+      }
+      .dd{
+          margin-right: 25px;
+      }
+      .dropdown-toggle{
+          direction: rtl;
+      }
+      .card_selection{
+          width: 200px;
+          margin-right: 0px;
+          direction: rtl;
+          position: end;
+      }
+
+      #main {
+        transition: margin-left 0.5s;
+        padding: 16px;
+      }
+
+      @media screen and (max-height: 450px) {
+        .selectbar {
+          padding-top: 15px;
+        }
+
+        .selectbar a {
+          font-size: 18px;
+        }
+      }
+
       .sidenav {
         height: 100%;
         width: 0;
@@ -89,12 +159,13 @@
         }
       }
       /* /////////////////////////////////////// */
+      /* /////////////////////////////////////// */
     
     </style>
   </head>
 
   <body>
-    <div id="mySidenav" class="sidenav">
+    <div id="mySelectnav" class="selectbar">
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
       <nav id="sidebar">
         
@@ -106,10 +177,10 @@
                 <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">الأنتاج</a>
                 <ul class="collapse list-unstyled" id="homeSubmenu">
                     <li>
-                        <a href="#" class="dd">خريطة الانتاج الزراعي </a>
+                        <a href="../pages/mapForProdect.html" class="dd" >خريطة الانتاج الزراعي </a>
                     </li>
                     <li>
-                        <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dd"> خريطة الانتاج الحيواني</a>
+                        <a href="../pages/mapOfanimalsProdact.html" data-toggle="collapse" aria-expanded="false" class="dd"> خريطة الانتاج الحيواني</a>
                     </li>
                 </ul> 
                 <li>
@@ -162,12 +233,13 @@
         <div class="col-8">
         <img src="../maps/Yeman2.svg" height="600" width="100%" alt="" />
       </div>
-      <div class="col-2"style="text-align: right;">
+       <div class="col-2">
         <i onclick="openLab('lab')" id="labButton" class="fas fa-angle-left" style=" color: #37517e; float: -2000px;"></i>
              
-        <div class="card  card_selection" id="lab" style="display: none;" >
+        <div class="card  card_selection" id="lab" style="display: none;margin-left: -213px;
+        margin-top: 42px;" >
         <div class="card-header bg-white">
-            <h5 style="text-align: right;">تحديد الجمعية</h5>
+            <h5 style="text-align: right;">تحديد المعمل</h5>
         </div>
         <div class="card-body">
           <div class="form-group">
@@ -219,18 +291,18 @@
         </div>
       
          </div>
-      </div>
+      </div> -->
     </div>
 
     <script>
       function openNav() {
-        document.getElementById("mySidenav").style.width = "250px";
+        document.getElementById("mySelectnav").style.width = "250px";
         document.getElementById("main").style.marginLeft = "250px";
         document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
       }
 
       function closeNav() {
-        document.getElementById("mySidenav").style.width = "0";
+        document.getElementById("mySelectnav").style.width = "0";
         document.getElementById("main").style.marginLeft = "0";
         document.body.style.backgroundColor = "white";
       }
