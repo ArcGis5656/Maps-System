@@ -8,115 +8,11 @@
   <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet/>
     <link rel=" stylesheet" href="../css/bootstrap.min.css" />
   <link rel="stylesheet" href="../css/all.min.css" />
+  <link rel="stylesheet" href="../css/main.css">
   <!-- <link rel="stylesheet" href="../css/main.css"> -->
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@300&display=swap');
-
-    .row {
-      font-family: 'Tajawal', sans-serif;
-    }
-
-    .sidenav {
-      font-family: 'Tajawal', sans-serif;
-      height: 100%;
-      width: 0;
-      position: fixed;
-      z-index: 1;
-      top: 0;
-      left: 0;
-      background-color: #37517e;
-      overflow-x: hidden;
-      transition: 0.5s;
-      padding-top: 60px;
-      color: #fff;
-    }
-
-    .sidenav a {
-      padding: 8px 8px 8px 32px;
-      text-decoration: none;
-      font-size: 25px;
-      color: #fff;
-      display: block;
-      transition: 0.3s;
-      font-size: 15px;
-      text-align: right;
-    }
-
-    .sidenav a:hover {
-      color: #f1f1f1;
-    }
-
-    .sidenav .closebtn {
-      position: absolute;
-      top: 0;
-      right: 25px;
-      font-size: 36px;
-      margin-left: 50px;
-      float: left;
-      text-align: left;
-      margin-right: 180px;
-
-    }
-
-    .dd {
-      margin-right: 25px;
-    }
-
-    .dropdown-toggle {
-      direction: rtl;
-    }
-
-
-    #main {
-      transition: margin-left 0.5s;
-      padding: 16px;
-    }
-
-    @media screen and (max-height: 450px) {
-      .sidenav {
-        padding-top: 15px;
-      }
-
-      .sidenav a {
-        font-size: 18px;
-      }
-    }
-
-    .card_selection {
-      margin-top: -10px;
-      margin-right: -200px;
-      background-color: #37517e;
-    }
-
-    .header_select {
-      margin-top: 0%;
-      width: auto;
-      height: auto;
-      color: #f1f1f1;
-      background-color: #37517e;
-      float: flex;
-      margin-top: -60px;
-      margin-right: -20px;
-      padding: 10px;
-      font-family: 'Tajawal', sans-serif;
-
-    }
-
-    .col-2-2 {
-      height: auto;
-      width: auto;
-      text-align: right;
-      margin-top: 200px;
-      border: 1px solid #f1f1f1;
-      padding: 25px;
-      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    }
-
-    h5 {
-      display: block;
-    }
-
+   
     /* /////////////////////////////////////// */
   </style>
 </head>
@@ -245,11 +141,10 @@
           </div>
           <div class="">
             <div class="mt-4" style="text-align: center !important; ">
-              <a href="#"><button class=""
-                  style="color: #fff; 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); margin-bottom: 5px;" class="btn btn-success">عرض</button></a>
+              <a href="#"><button style="" class="btn btn-success show_btn">عرض</button></a>
             </div>
             <div>
-              <a href="#"><button type="button" onclick="closeLab('lab')" style="color: #fff;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); margin-bottom: 5px;margin-right: 38px;" class="btn btn-danger">إلغاء</button></a>
+              <a href="#"><button type="button" onclick="closeLab('lab')" style="color: #fff;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); margin-bottom: 5px;margin-right: 48px;" class="btn btn-danger">إلغاء</button></a>
             </div>
           </div>
 

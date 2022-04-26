@@ -16,79 +16,9 @@
     />
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
     <link rel="stylesheet" href="../css/all.min.css" />
+    <link rel="stylesheet" href="../css/main.css">
    <title>خريطة الأنتاج الزراعي </title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-      .sidenav {
-        height: 100%;
-        width: 0;
-        position: fixed;
-        z-index: 1;
-        top: 0;
-        left: 0;
-        background-color: #37517e;
-        overflow-x: hidden;
-        transition: 0.5s;
-        padding-top: 60px;
-        color: #fff;
-      }
-
-      .sidenav a {
-        padding: 8px 8px 8px 32px;
-        text-decoration: none;
-        font-size: 25px;
-        color: #fff;
-        display: block;
-        transition: 0.3s;
-        font-size: 15px;
-        text-align: right;
-      }
-
-      .sidenav a:hover {
-        color: #f1f1f1;
-      }
-
-      .sidenav .closebtn {
-        position: absolute;
-        top: 0;
-        right: 25px;
-        font-size: 36px;
-        margin-left: 50px;
-        float: left;
-        text-align: left;
-        margin-right: 180px;
-
-      }
-      .dd{
-          margin-right: 25px;
-      }
-      .dropdown-toggle{
-          direction: rtl;
-      }
-      .card_selection{
-          width: 200px;
-          margin-right: 0px;
-          direction: rtl;
-          position: end;
-      }
-
-      #main {
-        transition: margin-left 0.5s;
-        padding: 16px;
-      }
-
-      @media screen and (max-height: 450px) {
-        .sidenav {
-          padding-top: 15px;
-        }
-
-        .sidenav a {
-          font-size: 18px;
-        }
-      }
-      /* /////////////////////////////////////// */
-    
-    </style>
   </head>
 
   <body>
@@ -160,14 +90,14 @@
         <div class="col-8">
         <img src="../maps/Yeman2.svg" height="600" width="100%" alt="" />
       </div>
-      <div class="col-2" style="text-align: right;">
+      <div class="col-2" style="text-align: right;"class="card_selection">
         <i onclick="openLab('lab')" id="labButton" class="fa-solid fa-sliders" style=" color: #37517e; font-size: 30px;"></i>
              
-        <div class="card  card_selection" id="lab" style="display: none;" >
-        <div class="card-header bg-white">
+        <div class="card_selection" id="lab" style="display: none;" >
+        <div class=" bg-white">
             <h5 style="text-align: right;">تحديد خريطة الأنتاج الزراعي</h5>
         </div>
-        <div class="card-body">
+        <div class="y">
           <div class="form-group">
               <label style="color: black; float:right;">المحافظة</label>
               <select name="" id="" class="form-control float-right"  style="direction: rtl;">
@@ -224,10 +154,10 @@
                 </select>
               </div>
         </div>
-        <div class="card-footer bg-white">
+        <div class="bg-white">
           <div class="mt-4" style="text-align: center !important; ">
-              <a href="pages/mapForProdect.html"><button class=" btn btn-primary">عرض</button></a> 
-              <a href="#"><button type="button" onclick="closeLab('lab')" class="btn btn-secondary">إلغاء</button></a>
+              <a href="pages/mapForProdect.html"><button class=" btn btn-primary show_btn">عرض</button></a> 
+              <a href="#"><button type="button" onclick="closeLab('lab')" class="btn btn-secondary cancel_btn">إلغاء</button></a>
         
             </div>
         </div>
