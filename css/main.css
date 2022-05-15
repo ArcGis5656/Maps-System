@@ -5,6 +5,7 @@ body{
 h1,h2,h3,h4,h5,h6{
     font-family:'Tajawal', sans-serif ;
 }
+
 .sidenav {
     height: 100%;
     width: 0;
@@ -20,21 +21,22 @@ h1,h2,h3,h4,h5,h6{
     font-size: smaller;
 }
 
-.sidenav a {
+/* .sidenav a {
     padding: 8px 8px 8px 32px;
     text-decoration: none;
     font-size: 15px;
     color: #818181;
     display: block;
     transition: 0.3s;
-}
+} */
+
 .morecontent span {
     display: none;
 }
 .ReadMore {
     display: visible;
 }
-.card{
+/* .card{
    width: 30%;
    float: right;
    margin: 50px 20px;
@@ -43,8 +45,8 @@ h1,h2,h3,h4,h5,h6{
    border-radius: 0 5px 5px #000;
    flex-wrap: wrap; 
    align-self: normal;
-}
-.cord h4{
+} */
+/* .cord h4{
     margin-top: 10px; 
 }
 .card p{
@@ -56,7 +58,7 @@ card a{
     display: inline-block;
     color: #fff;
     background-color: #2196f3;
-}
+} */
 .card_selection{
     margin-right: 10px;
     margin-top: 10px;
@@ -65,11 +67,7 @@ card a{
     position:center center;
     
 }
-.wrapper {
-    display: flex;
-    width: 100%;
-    align-items: stretch;
-}
+
 
 
 #sidebar.active {
@@ -119,20 +117,18 @@ a, a:hover, a:focus {
 }
 
 #sidebar {
-    /* don't forget to add all the previously mentioned styles here too */
-    background: #7386D5;
+    background:#7386D5;
     color: #fff;
     transition: all 0.3s;
 }
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: #6d7fcc;
+    background-color: #37517e;
 }
-
 #sidebar ul.components {
     padding: 20px 0;
-    border-bottom: 1px solid #47748b;
+    border-bottom: 1px solid #37517e;
 }
 
 #sidebar ul p {
@@ -152,7 +148,7 @@ a, a:hover, a:focus {
 
 #sidebar ul li.active > a, a[aria-expanded="true"] {
     color: #fff;
-    background: #333540;
+    background: #7582c7;
 }
 ul ul a {
     font-size: 0.9em !important;
@@ -272,5 +268,3 @@ color: #fff;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 
 .cancel_btn{
 color: #fff;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); margin-bottom: 5px;margin-right: 48px;
 }
-
-    

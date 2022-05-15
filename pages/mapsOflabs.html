@@ -16,7 +16,7 @@
     />
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
     <link rel="stylesheet" href="../css/all.min.css" />
-   <title>خريطة المعامل</title>
+   <title>خريطة معامل</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       .sidenav {
@@ -101,20 +101,20 @@
            
      <a href="../index.html"><p >الرئيسية</p></a> 
             <li class="active">
-                <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">الأنتاج</a>
+                <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">الإنتاج</a>
                 <ul class="collapse list-unstyled" id="homeSubmenu">
                     <li>
-                        <a href="#" class="dd">خريطة الانتاج الزراعي </a>
+                        <a href="#" class="dd">خريطة الإنتاج الزراعي </a>
                     </li>
                     <li>
-                        <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dd"> خريطة الانتاج الحيواني</a>
+                        <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dd"> خريطة الإنتاج الحيواني</a>
                     </li>
                 </ul> 
                 <li>
                 <a href="#center-Submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">المراكز الخدمية </a>
                 <ul class="collapse list-unstyled" id="center-Submenu">
                     <li>
-                        <a href="../pages/mapsOfMarket.html" class="dd">نقاط البيع  </a>
+                        <a href="../pages/mapsOfMarket.html" class="dd">معامل  </a>
                     </li
                     <li>
                         <a href="../pages/mapsOfdepot.html" class="dd">مستودعات </a>
@@ -163,11 +163,11 @@
       <div class="col-2" style="text-align: right;">
         <i onclick="openLab('lab')" id="labButton" class="fa-solid fa-sliders" style=" color: #37517e; font-size: 30px;"></i>
              
-        <div class="card_selection" id="lab" style="display: none;" >
-        <div class=" bg-white">
-            <h5 >تحديد المعامل</h5>
+        <div class="card  card_selection" id="lab" style="display: none;">
+        <div class="card-header bg-white">
+            <h5 style="text-align: right;">تحديد معامل</h5>
         </div>
-        <div class="style="text-align: right;">
+        <div class="card-body">
           <div class="form-group">
               <label style="color: black; float:right;">المحافظة</label>
               <select name="" id="" class="form-control float-right"  style="direction: rtl;">
@@ -208,7 +208,7 @@
                 </select>
            </div>
         </div>
-        <div class=" bg-white">
+        <div class="card-footer bg-white">
           <div class="mt-4" style="text-align: center !important; ">
               <a href="#"><button class=" btn btn-primary">عرض</button></a> 
               <a href="#"><button type="button" onclick="closeLab('lab')" class="btn btn-secondary">إلغاء</button></a>
