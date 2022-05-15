@@ -13,7 +13,7 @@ $(".same-height div").height(theMax);
 
 function openLab($id) {
   document.getElementById($id).style.display = "block";
-  document.getElementById("labButton").style.display = "none";
+  document.getElementById("labButton").style.display = "block";
 }
 function closeLab($id) {
   document.getElementById($id).style.display = "none";
