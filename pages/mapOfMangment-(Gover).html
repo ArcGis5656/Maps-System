@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
     <link rel="stylesheet" href="../css/all.min.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="../js/Function.js"></script>
     <title>خريطة الجمعيات</title>
     <style>
       .sidenav {
@@ -126,7 +127,7 @@
 
   <body>
     <div id="mySidenav" class="sidenav">
-\\
+
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
       <nav id="sidebar">
         
@@ -149,7 +150,7 @@
                 <ul class="collapse list-unstyled" id="center-Submenu">
                     <li>
                         <a href="../pages/mapsOfMarket.html" class="dd">نقاط البيع  </a>
-                    </li
+                    </li>
                     <li>
                         <a href="../pages/mapsOfdepot.html" class="dd">مستودعات </a>
                     </li>
@@ -170,7 +171,7 @@
                     <ul class="collapse list-unstyled" id="center-mange-Submenu">
                         <li>
                             <a href="../pages/mapOfMangment-(Gover).html" class="dd">جمعيات  </a>
-                        </li
+                        </li>
                         <li>
                             <a href="../pages/mapOfMangment-(union).html" class="dd">اتحادات </a>
                         </li>
@@ -197,12 +198,13 @@
       <div class="col-2 " style="text-align: right;">
         <div class="row">
           <div class="col-8">
-            <div class="card_selection" id="lab" style="display: none;" >
+            <script>
+              modelCenter();
+            </script>
+            <!-- <div class="card_selection" id="lab" style="display: none;" >
               <div class="">
                 <h5 style="text-align: right;">تحديد  الجمعية</h5>
-             
-                
-            </div>
+              </div>
            <div class="">
              <div class="">
                
@@ -257,10 +259,10 @@
             </div>
           
               
-            </div>
+            </div> -->
             
           </div>
-          <div class="col-4"> <i onclick="openLab('lab')" id="labButton" class="fa-solid fa-sliders" style=" color: #37517e; font-size: 30px;"></i></div>
+          <div class="col-4"> <i onclick="openLab('Centers')" id="labButton" class="fa-solid fa-sliders" style=" color: #37517e; font-size: 30px;"></i></div>
         </div>
         
              
