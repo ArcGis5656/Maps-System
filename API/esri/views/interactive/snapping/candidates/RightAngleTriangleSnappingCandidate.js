@@ -1,0 +1,5 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.23/esri/copyright.txt for details.
+//>>built
+define("exports ../../../../chunks/_rollupPluginBabelHelpers ../../../../chunks/vec2 ../../../../chunks/vec2f64 ../SnappingConstraint ../snappingUtils ./SnappingCandidate ../hints/LineSnappingHint ../hints/RightAngleSnappingHint".split(" "),function(f,g,h,n,p,k,b,l,q){b=function(m){function c({coordinateHelper:a,targetPoint:r,point1:d,point2:e}){a=m.call(this,a,r,new p.PlanarCircleConstraint(a,h.lerp(t,d,e,.5),.5*h.distance(d,e)))||this;a.p1=d;a.p2=e;return a}g._inheritsLoose(c,m);g._createClass(c,
+[{key:"hints",get:function(){return[new l.LineSnappingHint(k.LineSegmentHintType.REFERENCE,this.targetPoint,this.p1),new l.LineSnappingHint(k.LineSegmentHintType.REFERENCE,this.targetPoint,this.p2),new q.RightAngleSnappingHint(this.p1,this.targetPoint,this.p2)]}}]);return c}(b.SnappingCandidate);const t=n.create();f.RightAngleTriangleSnappingCandidate=b;Object.defineProperty(f,"__esModule",{value:!0})});

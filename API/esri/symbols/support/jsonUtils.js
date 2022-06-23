@@ -1,0 +1,6 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.23/esri/copyright.txt for details.
+//>>built
+define("exports ../../symbols ../../core/Error ../../core/maybe ../Symbol3D ./symbolConversion ../WebStyleSymbol".split(" "),function(e,k,g,f,l,m,n){function h(a,d,c){if(f.isNone(a))return null;const {context:b,isLabelSymbol:p}=c;if(!(!b||"web-scene"!==b.origin||a instanceof l||a instanceof n)){c=m.to3D(a,{retainCIM:!0,hasLabelingContext:p});if(f.isSome(c.symbol))return c.symbol.write(d,b);b.messages&&b.messages.push(new g("symbol:unsupported",`Symbols of type '${a.declaredClass}' are not supported in scenes. Use 3D symbology instead when working with WebScene and SceneView`,
+{symbol:a,context:b,error:c.error}));return null}return b&&"web-map"===b.origin&&"web-style"===a.type?(b.messages&&b.messages.push(new g("symbol:unsupported",`Symbols of type '${a.declaredClass}' are not supported in webmaps. Use CIMSymbol instead when working with WebMap in MapView.`,{symbol:a,context:b})),null):a.write(d,b)}e.fromJSON=function(a,d){return k.readSymbol(a,null,d)};e.write=function(a,d,c,b){a=h(a,{},{context:b,isLabelSymbol:!1});f.isSome(a)&&(d[c]=a)};e.writeLabelSymbol=function(a,
+d,c,b){a=h(a,{},{context:b,isLabelSymbol:!0});f.isSome(a)&&(d[c]=a)};Object.defineProperty(e,"__esModule",{value:!0})});

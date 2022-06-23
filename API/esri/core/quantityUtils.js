@@ -1,0 +1,4 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.23/esri/copyright.txt for details.
+//>>built
+define(["exports","./unitUtils"],function(c,d){function e(a,b){return{type:d.unitType(b),value:a,unit:b}}function f(a,b){return e(d.convertUnit(a.value,a.unit,b),b)}c.createArea=function(a,b){return{type:d.unitType(b),value:a,unit:b}};c.createLength=function(a,b){return{type:d.unitType(b),value:a,unit:b}};c.createQuantity=e;c.isBaseUnit=function(a){return d.isBaseUnit(a.unit)};c.toBaseUnit=function(a){return f(a,d.baseUnitForUnit(a.unit))};c.toUnit=f;Object.defineProperty(c,"__esModule",{value:!0})});

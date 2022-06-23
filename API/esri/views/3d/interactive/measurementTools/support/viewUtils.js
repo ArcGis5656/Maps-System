@@ -1,0 +1,5 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.23/esri/copyright.txt for details.
+//>>built
+define(["exports","../../../../../core/lang","../../../../../core/screenUtils","../../../../../chunks/vec2","../../../../../chunks/vec3f64"],function(e,r,f,g,t){function h(b,c,a){const d=a.state.camera;a.renderCoordsHelper.toRenderCoords(b,k);d.projectToRenderScreen(k,l);a.state.camera.renderToScreen(l,c)}const k=t.create(),l=f.createRenderScreenPointArray3(),m=f.createRenderScreenPointArray3(),n=f.createRenderScreenPointArray3(),p=f.createScreenPointArray(),q=f.createScreenPointArray();e.copyParameter=
+function(b,c){return{...b,...r.clone(c)}};e.pointToPointScreenDistance=function(b,c,a){h(b,p,a);h(c,q,a);return g.distance(p,q)};e.resizeArray=function(b,c,a,d){for(;b.length<c;)b.push(a());if(d)for(;b.length>c;)a=b.pop(),d(a);else b.length=c};e.screenSpaceTangent=function(b,c,a,d){d.projectToRenderScreen(b,m);d.projectToRenderScreen(c,n);g.subtract(a,n,m);g.normalize(a,a)};Object.defineProperty(e,"__esModule",{value:!0})});

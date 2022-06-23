@@ -1,0 +1,5 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.23/esri/copyright.txt for details.
+//>>built
+define(["exports"],function(b){b.OverlayIndex=void 0;(function(a){a[a.INNER=0]="INNER";a[a.OUTER=1]="OUTER"})(b.OverlayIndex||(b.OverlayIndex={}));b.PatchType=void 0;(function(a){a[a.REGULAR=0]="REGULAR";a[a.HAS_NORTH_POLE=1]="HAS_NORTH_POLE";a[a.HAS_SOUTH_POLE=2]="HAS_SOUTH_POLE";a[a.HAS_BOTH_POLES=3]="HAS_BOTH_POLES"})(b.PatchType||(b.PatchType={}));b.LODSnapping=void 0;(function(a){a[a.OFF=0]="OFF";a[a.ON=1]="ON"})(b.LODSnapping||(b.LODSnapping={}));b.RenderTargetType=void 0;(function(a){a[a.Color=
+0]="Color";a[a.ColorNoRasterImage=1]="ColorNoRasterImage";a[a.Highlight=2]="Highlight";a[a.Water=3]="Water";a[a.Occluded=4]="Occluded"})(b.RenderTargetType||(b.RenderTargetType={}));b.TextureUpdate=void 0;(function(a){a[a.FADING=0]="FADING";a[a.IMMEDIATE=1]="IMMEDIATE";a[a.UNFADED=2]="UNFADED"})(b.TextureUpdate||(b.TextureUpdate={}));Object.defineProperty(b,"__esModule",{value:!0})});

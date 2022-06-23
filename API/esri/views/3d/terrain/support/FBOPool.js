@@ -1,0 +1,5 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.23/esri/copyright.txt for details.
+//>>built
+define(["exports","../../../../core/ObjectPool","../../../webgl/enums","../../../webgl/FramebufferObject"],function(d,h,e,f){let k=function(){function g(a){this._rctx=a;this._pools=new Map}var c=g.prototype;c.acquire=function(a){return this._getPool(a).acquire()};c.release=function(a){this._getPool(a.width).release(a)};c.clear=function(){this._pools.forEach(a=>a.destroy());this._pools.clear()};c._getPool=function(a){var b=this._pools.get(a);b||(b=f.FramebufferObject.bind(f.FramebufferObject,this._rctx,
+{colorTarget:e.TargetType.TEXTURE,depthStencilTarget:e.DepthStencilTargetType.DEPTH_RENDER_BUFFER,width:a,height:a}),b=new h(b),this._pools.set(a,b));return b};return g}();d.FBOPool=k;Object.defineProperty(d,"__esModule",{value:!0})});

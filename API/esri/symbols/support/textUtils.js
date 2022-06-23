@@ -1,0 +1,5 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.23/esri/copyright.txt for details.
+//>>built
+define(["exports","../../core/mathUtils","../../core/accessorSupport/ensureType"],function(a,f,g){const h={type:Number,cast:b=>{b=g.ensureNumber(b);return 0===b?1:f.clamp(b,.1,4)},nonNullable:!0},c=["left","right","center","justify"],d=["left","right","center"],e=["baseline","top","middle","bottom"],k={type:c,nonNullable:!0},l={type:d,nonNullable:!0},m={type:e,nonNullable:!0};a.FONT_DECORATIONS=["none","underline","line-through"];a.FONT_STYLES=["normal","italic","oblique"];a.FONT_WEIGHTS=["normal",
+"lighter","bold","bolder"];a.HORIZONTAL_ALIGNMENTS=c;a.HORIZONTAL_ALIGNMENTS_3D=d;a.VERTICAL_ALIGNMENTS=e;a.horizontalAlignmentProperty=k;a.horizontalAlignmentProperty3D=l;a.lineHeightProperty=h;a.verticalAlignmentProperty=m;Object.defineProperty(a,"__esModule",{value:!0})});

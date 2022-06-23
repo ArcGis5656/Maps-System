@@ -1,0 +1,5 @@
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.23/esri/copyright.txt for details.
+*/
+import{e as i}from"../core/lang.js";import{O as n,s as r}from"./vectorStacks.js";import{p as o,b as t,j as e,h as c,d as s,a,n as u,f as g,e as d}from"./mathUtils.js";function f(i){return i?{origin:o(i.origin),direction:o(i.direction)}:{origin:t(),direction:t()}}function m(n,r){return i(n.origin,r.origin)&&i(n.direction,r.direction)}function l(i,n){const r=k.get();return r.origin=i,r.direction=n,r}function p(i,n=f()){return b(i.origin,i.direction,n)}function j(i,n,r=f()){return e(r.origin,i),c(r.direction,n,i),r}function b(i,n,r=f()){return e(r.origin,i),e(r.direction,n),r}function h(i,n){const o=a(r.get(),u(r.get(),i.direction),c(r.get(),n,i.origin));return s(o,o)}function w(i,n,r){const o=s(i.direction,c(r,n,i.origin));return g(r,i.origin,d(r,i.direction,o)),r}const k=new n((function(){return{origin:null,direction:null}}));export{w as a,p as b,f as c,h as d,j as e,b as f,m as g,l as w};

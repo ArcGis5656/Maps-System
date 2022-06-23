@@ -1,0 +1,4 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.23/esri/copyright.txt for details.
+//>>built
+define("exports ../../core/mathUtils ./widgetUtils ../../core/has ../../core/Logger ./jsxFactory".split(" "),function(b,d,g,l,m,h){const e={heading:"esri-widget__heading"};b.CSS=e;b.Heading=function(a,c){const f=d.clamp(Math.ceil(a.level),1,6),k=`h${f}`;delete a.level;return h.tsx(k,{...a,class:g.classes(e.heading,a.class),role:"heading","aria-level":String(f)},c)};b.incrementHeadingLevel=function(a,c=1){return d.clamp(Math.ceil(a+c),1,6)};Object.defineProperty(b,"__esModule",{value:!0})});
