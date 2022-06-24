@@ -241,8 +241,12 @@ function modelCenter() {
     /*****************************************************************
      *! Create FeatureLayers instances.
      *****************************************************************/
+    //variables
+    let government,
+      phones = [];
+
     // renderer the workshopsLayer
-     const Labs_Workshops_Renderer = {
+    const Labs_Workshops_Renderer = {
       type: "unique-value", // autocasts as new UniqueValueRenderer()
       field: "Actual_Power",
       defaultSymbol: { type: "simple-marker" }, // autocasts as new SimpleFillSymbol()
@@ -258,7 +262,7 @@ function modelCenter() {
             {
               value: 0,
               color: "yellow",
-  
+
               label: "=0%",
             },
             {
@@ -371,5 +375,160 @@ function modelCenter() {
 
     // Add widgets to the view
     view.ui.add(legendExpand, "bottom-right");
+    /*****************************************************************
+     *! the point queries
+     *****************************************************************/
+
+    view.on("click", (event) => {
+      // only include graphics from hurricanesLayer in the hitTest
+      const opts = {
+        include: WorkshopsLayer,
+      };
+
+      view
+        .hitTest(event, opts)
+        .then((response) => {
+          // check if a feature is returned from the hurricanesLayer
+          if (response.results.length) {
+            const graphic = response.results[0].graphic;
+            // do something with the graphic
+            return graphic.attributes["OBJECTID"];
+          }
+        })
+        .then((objectId) => {
+          // all queries
+          return WorkshopsLayer.queryRelatedFeatures({
+            outFields: ["*"],
+            relationshipId: WorkshopsLayer.relationships[0].id,
+            objectIds: objectId,
+          })
+            .then((results) => {
+              //phones
+              phones = [];
+              results[objectId].features.forEach((element) => {
+                console.log(element.attributes["Phone"]);
+                phones.push(element.attributes["Phone"]);
+              });
+            })
+            .then(function () {
+              return WorkshopsLayer.queryRelatedFeatures({
+                outFields: ["*"],
+                relationshipId: WorkshopsLayer.relationships[1].id,
+                objectIds: objectId,
+              })
+                .then((results) => {
+                  // directorate
+                  results[objectId].features.forEach((element) => {
+                    console.log(element.attributes["OBJECTID_1"]);
+                  });
+                  console.log(
+                    results[objectId].features[0].attributes["OBJECTID_1"]
+                  );
+                  return results[objectId].features[0].attributes["OBJECTID_1"];
+                })
+                .then(function (oid) {
+                  console.log(oid);
+                  return DirectorateLayer.queryRelatedFeatures({
+                    outFields: ["*"],
+                    relationshipId: DirectorateLayer.relationships[9].id,
+                    objectIds: oid,
+                  }).then((results) => {
+                    //government
+                    results[oid].features.forEach((element) => {
+                      console.log(element.attributes["Government_Name_Arabic"]);
+                      government = element.attributes["Government_Name_Arabic"];
+                    });
+                  });
+                });
+            });
+        })
+        .then(() => {
+          // display the popupTemplate
+          WorkshopsLayer.popupTemplate = {
+            title: "{Workshop_Name}",
+            expressionInfos: [
+              {
+                name: "Unused Energy",
+                title: "الطاقة الغير مستغلة",
+                expression: "$feature.Maximum_Power - $feature.Actual_Power",
+              },
+            ],
+            content: [
+              {
+                type: "fields",
+                fieldInfos: [
+                  {
+                    label: "اسم المعمل",
+                    fieldName: "Lab_Name",
+                  },
+                  {
+                    label: "المسؤول",
+                    fieldName: "Administrator",
+                  },
+                  {
+                    label: "الكود",
+                    fieldName: "Code",
+                  },
+                  {
+                    label: "التصريح",
+                    fieldName: "Declaration",
+                  },
+                  {
+                    label: "الطاقة القصوى",
+                    fieldName: "Maximum_Power",
+                    format: {
+                      digitSeparator: true,
+                    },
+                  },
+                  {
+                    label: "الطاقة الفعلية",
+                    fieldName: "Actual_Power",
+                    format: {
+                      digitSeparator: true,
+                    },
+                  },
+                  {
+                    label: "الطاقة الغير مستغلة",
+                    fieldName: "expression/Unused Energy",
+                    format: {
+                      digitSeparator: true,
+                    },
+                  },
+                ],
+              },
+              {
+                // Pass in the fields to display
+                type: "custom",
+                creator: function () {
+                  return (
+                    '<div class="esri-feature-fields" style="margin-top:-24px; margin-bottom:-24px;"><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody><tr><th class="esri-feature-fields__field-header">التلفون</th><td class="esri-feature-fields__field-data"> ' +
+                    phones.toString() +
+                    "</td></tr></tbody></table></div>"
+                  );
+                },
+              },
+              {
+                type: "custom",
+                creator: function () {
+                  return (
+                    '<div class="esri-feature-fields" style="margin-top:-24px; margin-bottom:-24px;"><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody><tr style="background-color:rgba(76,76,76,.02);"><th class="esri-feature-fields__field-header">المحافظة</th><td class="esri-feature-fields__field-data"> ' +
+                    government +
+                    "</td></tr></tbody></table></div>"
+                  );
+                },
+              },
+              {
+                type: "fields",
+                fieldInfos: [
+                  {
+                    label: "المديرية",
+                    fieldName: "relationships/21/Directorate_Name_Arabic",
+                  },
+                ],
+              },
+            ],
+          };
+        });
+    });
   });
 }
