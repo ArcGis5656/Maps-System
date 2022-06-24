@@ -6,7 +6,18 @@ function modelCenter() {
     "esri/layers/FeatureLayer",
     "esri/widgets/Legend",
     "esri/widgets/Expand",
-  ], function (query, Map, MapView, FeatureLayer, Legend, Expand) {
+    "esri/layers/GraphicsLayer",
+    "esri/Graphic",
+  ], function (
+    query,
+    Map,
+    MapView,
+    FeatureLayer,
+    Legend,
+    Expand,
+    GraphicsLayer,
+    Graphic
+  ) {
     /**
      *!  ********************************************************************************************************************************
      *! start the map filter
@@ -53,6 +64,7 @@ function modelCenter() {
     //? directorates
     async function displayDirectorates(DirectorateObject) {
       Directorates = new Object();
+
       await query
         .executeQueryJSON(
           "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/5",
@@ -66,7 +78,6 @@ function modelCenter() {
             Directorates_Workshop.push(element.attributes.DirectorateID);
           });
         });
-
       for (let i = 0; i < DirectorateObject.length; i++) {
         for (let j = 0; j < Directorates_Workshop.length; j++) {
           if (
@@ -79,7 +90,7 @@ function modelCenter() {
                   Directorates[DirectorateObject[i].attributes.DirectorateID] =
                     DirectorateObject[i].attributes.Directorate_Name_Arabic;
                 } else {
-                  console.log("found it in directorates");
+                  // console.log("found it in directorates");
                 }
               }
             } else {
@@ -89,7 +100,13 @@ function modelCenter() {
           }
         }
       }
-
+      //first is null for the zoom
+      // selectedDir.empty();
+      let optionSelectDir = document.createElement("option");
+      optionSelectDir.value = "default";
+      optionSelectDir.text = "";
+      selectedDir.appendChild(optionSelectDir);
+      // the rest
       for (let key in Directorates) {
         let optionSelectDir = document.createElement("option");
         optionSelectDir.value = key;
@@ -145,6 +162,10 @@ function modelCenter() {
     selectedDir.classList.add("form-control");
 
     selectedGov.addEventListener("change", function (event) {
+      var length = selectedDir.options.length;
+      for (i = length - 1; i >= 0; i--) {
+        selectedDir.options[i] = null;
+      }
       Goverment_id = selectedGov.options[selectedGov.selectedIndex].value;
       if (event) {
         query
@@ -182,10 +203,33 @@ function modelCenter() {
       var Goverment = select1.options[select1.selectedIndex].value;
       var select2 = document.getElementById("Dirctorate");
       var Dirctorate = select2.options[select2.selectedIndex].value;
-
-      // document.write(
-      //   ` the government is ${Goverment} and Dirctorate is ${Dirctorate} `
-      // );
+      if (Dirctorate == "default") {
+        query
+          .executeQueryJSON(
+            "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/9",
+            {
+              outFields: ["Government_Name_Arabic", "GovernmentID"],
+              where: "GovernmentID =" + Goverment,
+              returnGeometry: true,
+            }
+          )
+          .then(function (result) {
+            highlightSelection(result.features[0]);
+          });
+      } else {
+        query
+          .executeQueryJSON(
+            "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/10",
+            {
+              outFields: ["Directorate_Name_Arabic", "DirectorateID"],
+              where: "DirectorateID  =" + Dirctorate,
+              returnGeometry: true,
+            }
+          )
+          .then(function (result) {
+            highlightSelection(result.features[0]);
+          });
+      }
     };
     // ending building function that fetch values
 
@@ -238,9 +282,6 @@ function modelCenter() {
      *! start the map design
      *!  ********************************************************************************************************************************
      **/
-    /*****************************************************************
-     *! Create FeatureLayers instances.
-     *****************************************************************/
     //variables
     let government,
       phones = [];
@@ -301,14 +342,43 @@ function modelCenter() {
         },
       ],
     };
+    //Highlight the selected feature
+    const highlightSelection = (feature) => {
+      view.graphics.removeAll();
+      if (feature.key != 0) {
+        var polygon = {
+          type: "polygon",
+          rings: feature.geometry.rings,
+        };
+        var simpleFillSymbol = {
+          type: "simple-fill",
+          color: [152, 239, 249, 0.7], // orange, opacity 80%
+          outline: {
+            color: [11, 255, 255],
+            width: 2,
+          },
+        };
+        var attributes = {
+          name: feature.title,
+          id: feature.key,
+        };
 
+        var polygonGraphic = new Graphic({
+          geometry: polygon,
+          symbol: simpleFillSymbol,
+          attributes: attributes,
+        });
+        view.graphics.add(polygonGraphic);
+        view.goTo(polygonGraphic.geometry.extent);
+      } else view.goTo(this.mapExtent);
+    };
     var GovernmentLayer = new FeatureLayer({
       url: "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/9",
       id: "Governments",
       visible: true,
       outFields: ["Government_Name_Arabic", "GovernmentID"],
       popupTemplate: {
-        title: "{Government_Name_Arabic}",
+        title: "محافظة {Government_Name_Arabic} ",
       },
     });
     var DirectorateLayer = new FeatureLayer({
@@ -317,7 +387,7 @@ function modelCenter() {
       visible: true,
       outFields: ["Directorate_Name_Arabic", "DirectorateID"],
       popupTemplate: {
-        title: "{Directorate_Name_Arabic}",
+        title: " مديرية {Directorate_Name_Arabic}",
       },
     });
     var WorkshopsLayer = new FeatureLayer({
@@ -344,6 +414,9 @@ function modelCenter() {
       container: "viewDiv", // References the ID of a DOM element
       map: map, // References a Map instance
     });
+    /*****************************************************************
+     *! Create FeatureLayers instances.
+     *****************************************************************/
 
     /*****************************************************************
      * The map handles the layers' data while the view and layer views
@@ -352,16 +425,16 @@ function modelCenter() {
     view.on("layerview-create", (event) => {
       if (event.layer.id === "Yemen") {
         // Explore the properties of the population layer's layer view here
-        console.log("LayerView for Yemen created!", event.layerView);
+        // console.log("LayerView for Yemen created!", event.layerView);
       }
       if (event.layer.id === "Governments") {
-        console.log("LayerView for Governments created!", event.layerView);
+        // console.log("LayerView for Governments created!", event.layerView);
       }
       if (event.layer.id === "Directorates") {
-        console.log("LayerView for Directorate created!", event.layerView);
+        // console.log("LayerView for Directorate created!", event.layerView);
       }
       if (event.layer.id === "Workshops") {
-        console.log("LayerView for WorkshopsLayer created!", event.layerView);
+        // console.log("LayerView for WorkshopsLayer created!", event.layerView);
       }
     });
     const legend = new Legend({ view: view });
@@ -406,7 +479,7 @@ function modelCenter() {
               //phones
               phones = [];
               results[objectId].features.forEach((element) => {
-                console.log(element.attributes["Phone"]);
+                // console.log(element.attributes["Phone"]);
                 phones.push(element.attributes["Phone"]);
               });
             })
@@ -419,15 +492,15 @@ function modelCenter() {
                 .then((results) => {
                   // directorate
                   results[objectId].features.forEach((element) => {
-                    console.log(element.attributes["OBJECTID_1"]);
+                    // console.log(element.attributes["OBJECTID_1"]);
                   });
-                  console.log(
-                    results[objectId].features[0].attributes["OBJECTID_1"]
-                  );
+                  // console.log(
+                  //   results[objectId].features[0].attributes["OBJECTID_1"]
+                  // );
                   return results[objectId].features[0].attributes["OBJECTID_1"];
                 })
                 .then(function (oid) {
-                  console.log(oid);
+                  // console.log(oid);
                   return DirectorateLayer.queryRelatedFeatures({
                     outFields: ["*"],
                     relationshipId: DirectorateLayer.relationships[9].id,
@@ -435,8 +508,16 @@ function modelCenter() {
                   }).then((results) => {
                     //government
                     results[oid].features.forEach((element) => {
-                      console.log(element.attributes["Government_Name_Arabic"]);
+                      // console.log(element.attributes["Government_Name_Arabic"]);
                       government = element.attributes["Government_Name_Arabic"];
+                      // zoomToFeature
+                      GovernmentLayer.queryExtent({
+                        where:
+                          "OBJECTID_1 =" + element.attributes["OBJECTID_1"],
+                      }).then(function (results) {
+                        // console.log(results);
+                        view.goTo(results.extent); // go to the extent of the results satisfying the query
+                      });
                     });
                   });
                 });
