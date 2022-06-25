@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link href="../assets/vendor/aos/aos.css" rel="stylesheet" />
+  <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="../assets/vendor/bootstrap/css/bootstrap.rtl.css" rel="stylesheet" />
+  <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/bootstrap.min.css" />
+  <link rel="stylesheet" href="../css/all.min.css" />
+  <!-- /***************************************************************** 
+    *! start map
+    *****************************************************************/ -->
+  <link rel="stylesheet" href="../API/esri/themes/light/main.css" />
+  <link rel="stylesheet" href="../css/map.css" />
+  <script src="../API/init.js"></script>
+  <script src="../js/Repositories_Function&Queries.js"></script>
+  <!-- /***************************************************************** 
+    *! end map
+    *****************************************************************/ -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- <script src="../js/Function.js"></script> -->
+  <title>خريطة المستودعات</title>
+  <style>
+    .sidenav {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      background-color: #37517e;
+      overflow-x: hidden;
+      transition: 0.5s;
+      padding-top: 60px;
+      color: #fff;
+
+    }
+
+    .sidenav a {
+      padding: 8px 8px 8px 32px;
+      text-decoration: none;
+      font-size: 25px;
+      color: #fff;
+      display: block;
+      transition: 0.3s;
+      font-size: 15px;
+      text-align: right;
+    }
+
+    .sidenav a:hover {
+      color: #f1f1f1;
+    }
+
+    .sidenav .closebtn {
+      position: absolute;
+      top: 0;
+      right: 25px;
+      font-size: 36px;
+      margin-left: 50px;
+      float: left;
+      text-align: left;
+      margin-right: 180px;
+
+    }
+
+    .dd {
+      margin-right: 25px;
+    }
+
+    .dropdown-toggle {
+      direction: rtl;
+    }
+
+    .card_selection {
+      width: 200px;
+      margin-right: 0px;
+      direction: rtl;
+      position: end;
+    }
+
+    #main {
+      transition: margin-left 0.5s;
+      padding: 16px;
+    }
+
+    @media screen and (max-height: 450px) {
+      .sidenav {
+        padding-top: 15px;
+      }
+
+      .sidenav a {
+        font-size: 18px;
+      }
+    }
+
+    .card_selection {
+
+      height: 90%;
+      background-color: #fff;
+      border: 1px solid #eee;
+      padding: 20px;
+      margin-block-end: 150px;
+      /* box-shadow: 0px 0px 5px rgba(127, 137, 161, 0.25); */
+
+
+    }
+
+    .divide {
+      border-top: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+      border-left: 0px;
+      border-right: 0px;
+      box-shadow: 0px 0px 5px rgba(127, 137, 161, 0.25);
+      padding: 20px;
+      margin-bottom: 10px;
+    }
+
+    .farming {
+      border: 1px solid #eee;
+      width: 158px;
+      height: 200px;
+      box-shadow: 0px 0px 5px rgba(127, 137, 161, 0.25);
+      padding: 20px;
+      margin-bottom: 10px;
+
+
+
+    }
+
+    html,
+    body,
+    #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+
+    /* ////////////////////////////////////// */
+  </style>
+</head>
+
+<body>
+  <!-- <div id="mySidenav" class="sidenav">
+
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+      <nav id="sidebar">
+        
+
+        <ul class="list-unstyled components">
+           
+     <a href="../index.html"><p >الرئيسية</p></a> 
+            <li class="active">
+                <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">الإنتاج</a>
+                <ul class="collapse list-unstyled" id="homeSubmenu">
+                    <li>
+                        <a href="../pages/mapForProdect.html" class="dd">خريطة الإنتاج الزراعي </a>
+                    </li>
+                    <li>
+                        <a href="../pages/mapOfanimalsProdact.html"  class="dd"> خريطة الإنتاج الحيواني</a>
+                    </li>
+                </ul> 
+                <li>
+                <a href="#center-Submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">المراكز الخدمية </a>
+                <ul class="collapse list-unstyled" id="center-Submenu">
+                    <li>
+                        <a href="../pages/mapsOfMarket.html" class="dd">نقاط البيع  </a>
+                    </li>
+                    <li>
+                        <a href="../pages/mapsOfRepositories.html" class="dd">مستودعات </a>
+                    </li>
+                    <li>
+                        <a href="../pages/mapsOfFridge.html" class="dd">ثلاجات </a>
+                    </li>
+                    <li>
+                        <a href="../pages/mapsOflabs.html" class="dd">معامل  </a>
+                    </li>
+                    
+                    <li>
+                        <a href="../pages/‏‏mapsOfworkshop.html" class="dd">ورش </a>
+                    </li>
+                    </ul> 
+                </li>
+                <li>
+                    <a href="#center-mange-Submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">المراكز الادارية </a>
+                    <ul class="collapse list-unstyled" id="center-mange-Submenu">
+                        <li>
+                            <a href="../pages/mapOfMangment-(Gover).html" class="dd">جمعيات  </a>
+                        </li>
+                        <li>
+                            <a href="../pages/mapOfMangment-(union).html" class="dd">اتحادات </a>
+                        </li>
+                        <li>
+                       
+                        </ul> 
+                    </li>  
+            
+        </ul>
+    </nav> -->
+
+  </div>
+
+  <div id="main">
+    <div class="row">
+      <div class="col-10 pl-3" id="viewDiv" style="height: 720px; width: 600px">
+        <!-- <img src="../maps/Yeman2.svg" height="600" width="100%" alt="" /> -->
+      </div>
+      <div class="col-2 mr-n5" style="text-align: right">
+        <div class="row">
+
+
+          <div class="col-8">
+            <script>
+              modelCenter();
+            </script>
+          </div>
+          <div class="col-4">
+            <a href="../index.html"><i style="color: #37517e; font-size: 30px" class="fas fa-home mb-2">
+              </i></a>
+          <!-- <img src="../maps/Yeman2.svg" height="600" width="100%" alt="" /> -->
+        
+
+        
+          <i onclick="openLab('Centers')" id="labButton" class="fa-solid fa-sliders"
+            style=" color: #37517e; font-size: 30px;">
+          </i>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+  </div>
+
+  <script>
+    function openNav() {
+      document.getElementById("mySidenav").style.width = "250px";
+      document.getElementById("main").style.marginLeft = "250px";
+      document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+    }
+
+    function closeNav() {
+      document.getElementById("mySidenav").style.width = "0";
+      document.getElementById("main").style.marginLeft = "0";
+      document.body.style.backgroundColor = "white";
+    }
+
+  </script>
+  <!-- <script src="../js/popper.min.js"></script>  قالت انها مهمة -->
+  <script src="../js/jquery-3.6.0.min.js"></script>
+  <!-- <script src="../js/bootstrap.js"></script> -->
+  <script src="../js/jquery.js"></script>
+  <!-- <script src="../assets/js/main.js"></script> -->
+  <!-- <script src="../js/main.js"></script> -->
+  <script src="../js/slider.js"></script>
+
+</body>
+
+</html>

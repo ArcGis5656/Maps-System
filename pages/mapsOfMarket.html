@@ -17,8 +17,20 @@
     />
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
     <link rel="stylesheet" href="../css/all.min.css" />
+    <!-- /***************************************************************** 
+    *! start map
+    *****************************************************************/ -->
+    <link rel="stylesheet" href="../API/esri/themes/light/main.css" />
+    <link rel="stylesheet" href="../css/map.css" />
+    <script src="../API/init.js"></script>
+    <script src="../js/Points_Sales_Function&Queries.js"></script>
+    <!-- /***************************************************************** 
+    *! end map
+    *****************************************************************/ -->
+
+
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script src="../js/Function.js"></script>
+    <!-- <script src="../js/Function.js"></script> -->
     <title>خريطة نقاط البيع</title>
     <style>
       .sidenav {
@@ -120,13 +132,22 @@
 
 
       }
+
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
       /* ////////////////////////////////////// */
     
     </style>
   </head>
 
   <body>
-    <div id="mySidenav" class="sidenav">
+    <!-- <div id="mySidenav" class="sidenav">
 
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
       <nav id="sidebar">
@@ -181,107 +202,39 @@
                     </li>  
             
         </ul>
-    </nav>
+    </nav> -->
            
     </div>
 
     <div id="main">
       <div class="row">
-        <div class="col-2 ">
-          <i style="font-size: 30px; cursor: pointer ;color:#37517e;"  onclick="openNav()"
-            class="fas fa-align-justify"></i> 
-          
+                <div class="col-10 pl-3" id="viewDiv" style="height: 720px; width: 600px">
+          <!-- <img src="../maps/Yeman2.svg" height="600" width="100%" alt="" /> -->
         </div>
-        <div class="col-8">
-        <img src="../maps/Yeman2.svg" height="600" width="100%" alt="" />
-      </div>
-      <div class="col-2 " style="text-align: right;">
-        <div class="row">
-          <div class="col-8">
-            <script>
-              modelCenter();
-            </script>
-            <!-- <div class="card_selection" id="lab" style="display: none;" >
-              <div class="">
-                <h5 style="text-align: right;">تحديد  نقطة البيع</h5>
-             
-                
+        <div class="col-2 mr-n5" style="text-align: right">
+          <div class="row">
+            <div class="col-8">
+              <script>
+                modelCenter();
+              </script>
             </div>
-           <div class="">
-             <div class="">
-               
-               <div class="form-group">
-                   <label style="color: black; float:right;">المحافظة</label>
-                   <select name="" id="" class="form-control float-right"  style="direction: rtl;">
-       
-                     <option>صنعاء</option> 
-                        <option>صعدة</option>
-                        <option>حجة</option>
-                        <option>حضرموت</option>
-                        <option>المحويت</option>
-                        <option>ذمار</option>
-                        <option>ريمه</option>
-                        <option>الحديدة</option>
-                        <option>الضالع</option>
-                        <option>المهرة</option>
-                        <option>أبين</option>
-                        <option>عدن</option> 
-                        <option>أب</option>
-                        <option>تعز</option>
-                        <option>سقطرى</option>
-                        <option>لحج</option>
-                        <option>البيضاء</option>
-                        <option>زبيد</option>
-                   </select>
-                 </div>
-                   <div class="form-group">
-                     <label style="color: black ; float:right;">المديرية</label>
-                     <select name="" id="" class="form-control"  style="direction: rtl;">
-                       <option>1مديرية</option>
-                           <option>2مديرية</option>
-                           <option>3مديرية</option>
-                           <option>4مديرية</option>
-                           <option>5مديرية</option>
-                           <option>6مديرية</option>
-                           <option>7مديرية</option>
-                           <option>8مديرية</option>
-                           <option>9مديرية</option>
-                           <option>10مديرية</option>
-                     </select>
-                </div>
-             </div>
-                
-                
-                <br>
-                <br>
-                <br>
-                
-                <div class="">
-                  <div class="mt-4" style="text-align: center !important; ">
-                      <a href="#"><button class=" btn btn-primary">عرض</button></a> 
-                      <a href="#"><button type="button" onclick="closeLab('lab')" class="btn btn-secondary">إلغاء</button></a>
-                      
-                    </div>
-                  </div>
+            <div class="col-4">
+               <a href="../index.html"><i
+              style="color: #37517e; font-size: 30px"
+                class="fas fa-home mb-2"
+              >
+            </i></a>
+              <i
+                onclick="openLab('Centers')"
+                id="labButton"
+                class="fa-solid fa-sliders"
+                style="color: #37517e; font-size: 30px"
+              ></i>
             </div>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-           
-              
-            </div> -->
-            
           </div>
-          <div class="col-4"> <i onclick="openLab('Centers')" id="labButton" class="fa-solid fa-sliders" style=" color: #37517e; font-size: 30px;"></i></div>
         </div>
-        
-             
       </div>
     </div>
-  </div>
 
     <script>
       function openNav() {
@@ -297,12 +250,12 @@
       }
     </script>
     
-    <script src="../js/popper.min.js"></script>
+    <!-- <script src="../js/popper.min.js"></script>  قالت انها مهمة --->
     <script src="../js/jquery-3.6.0.min.js"></script>
-    <script src="../js/bootstrap.js"></script>
-    <script src="../js/jquery.js"></script>
-    <script src="../assets/js/main.js"></script>
-    <script src="../js/main.js"></script>
+    <!-- <script src="../js/bootstrap.js"></script> -->
+    <!-- <script src="../js/jquery.js"></script> -->
+    <!-- <script src="../assets/js/main.js"></script> -->
+    <!-- <script src="../js/main.js"></script> -->
     <script src="../js/slider.js"></script>
   
   </body>
