@@ -374,6 +374,7 @@ require([
         };
       });
   });
+  
   function clearMap() {
     if (highlight) {
       highlight.remove();

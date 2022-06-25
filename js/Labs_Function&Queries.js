@@ -26,7 +26,7 @@ function modelCenter() {
     //variables
     let Governments = new Object(),
       Directorates = new Object(),
-      Directorates_Workshop = [],
+      Directorates_Labs = [],
       Goverment_id;
 
     // wedgits
@@ -67,7 +67,7 @@ function modelCenter() {
 
       await query
         .executeQueryJSON(
-          "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/5",
+          "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/4",
           {
             outFields: ["DirectorateID"],
             where: "1=1",
@@ -75,18 +75,18 @@ function modelCenter() {
         )
         .then((results) => {
           results.features.forEach((element) => {
-            Directorates_Workshop.push(element.attributes.DirectorateID);
+            Directorates_Labs.push(element.attributes.DirectorateID);
           });
         });
       for (let i = 0; i < DirectorateObject.length; i++) {
-        for (let j = 0; j < Directorates_Workshop.length; j++) {
+        for (let j = 0; j < Directorates_Labs.length; j++) {
           if (
             DirectorateObject[i].attributes.DirectorateID ===
-            Directorates_Workshop[j]
+            Directorates_Labs[j]
           ) {
             if (Object.keys(Directorates).length) {
               for (let z = 0; z < Object.keys(Directorates).length; z++) {
-                if (Directorates_Workshop[j] !== Directorates[z]) {
+                if (Directorates_Labs[j] !== Directorates[z]) {
                   Directorates[DirectorateObject[i].attributes.DirectorateID] =
                     DirectorateObject[i].attributes.Directorate_Name_Arabic;
                 } else {
@@ -274,7 +274,7 @@ function modelCenter() {
 
     /**
      *!  ********************************************************************************************************************************
-     *! end the map filter
+     *! start the map filter
      *!  ********************************************************************************************************************************
      **/
     /**
@@ -283,6 +283,7 @@ function modelCenter() {
      *!  ********************************************************************************************************************************
      **/
     //variables
+    ///////////////////////////////////////////////////////////////////////////////////////////////
     let government,
       phones = [];
 
@@ -303,7 +304,7 @@ function modelCenter() {
             {
               value: 0,
               color: "yellow",
-
+  
               label: "=0%",
             },
             {
@@ -325,17 +326,17 @@ function modelCenter() {
           stops: [
             {
               value: 0,
-              size: 12,
+              size: 18,
               label: "=0%",
             },
             {
               value: 0.99,
-              size: 9,
+              size: 12,
               label: "<= 99% & >0%",
             },
             {
               value: 1,
-              size: 7,
+              size: 8,
               label: "=100%",
             },
           ],
@@ -390,13 +391,14 @@ function modelCenter() {
         title: " مديرية {Directorate_Name_Arabic}",
       },
     });
-    var WorkshopsLayer = new FeatureLayer({
-      url: "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/5",
-      id: "Workshops",
+    var LabsLayer = new FeatureLayer({
+      url: "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/4",
+      id: "Labs",
       visible: true,
       outFields: ["*"],
       renderer: Labs_Workshops_Renderer,
     });
+    ////////////////////////////////////////////////////////////////////////////////////
     /*****************************************************************
      *! Layers may be added to the map in the map's constructor
      *****************************************************************/
@@ -407,7 +409,7 @@ function modelCenter() {
      *****************************************************************/
     map.add(GovernmentLayer); // adds the layer to the map
     map.add(DirectorateLayer); // adds the layer to the map
-    map.add(WorkshopsLayer); // adds the layer to the map
+    map.add(LabsLayer); // adds the layer to the map
     /*****************************************************************/
 
     var view = new MapView({
@@ -433,7 +435,7 @@ function modelCenter() {
       if (event.layer.id === "Directorates") {
         // console.log("LayerView for Directorate created!", event.layerView);
       }
-      if (event.layer.id === "Workshops") {
+      if (event.layer.id === "Labs") {
         // console.log("LayerView for WorkshopsLayer created!", event.layerView);
       }
     });
@@ -452,12 +454,12 @@ function modelCenter() {
      *! the point queries
      *****************************************************************/
 
-    view.on("click", (event) => {
+     view.on("click", (event) => {
       // only include graphics from hurricanesLayer in the hitTest
       const opts = {
-        include: WorkshopsLayer,
+        include: LabsLayer,
       };
-
+  
       view
         .hitTest(event, opts)
         .then((response) => {
@@ -469,64 +471,72 @@ function modelCenter() {
           }
         })
         .then((objectId) => {
-          // all queries
-          return WorkshopsLayer.queryRelatedFeatures({
-            outFields: ["*"],
-            relationshipId: WorkshopsLayer.relationships[0].id,
-            objectIds: objectId,
-          })
+          // console.log(objectId);//2
+          return LabsLayer
+            .queryRelatedFeatures({
+              outFields: ["*"],
+              relationshipId: LabsLayer.relationships[3].id,
+              objectIds: objectId,
+            })
             .then((results) => {
-              //phones
+              // console.log(results);
               phones = [];
               results[objectId].features.forEach((element) => {
-                // console.log(element.attributes["Phone"]);
+                console.log(element.attributes["Phone"]);
                 phones.push(element.attributes["Phone"]);
               });
             })
             .then(function () {
-              return WorkshopsLayer.queryRelatedFeatures({
-                outFields: ["*"],
-                relationshipId: WorkshopsLayer.relationships[1].id,
-                objectIds: objectId,
-              })
+              return LabsLayer
+                .queryRelatedFeatures({
+                  outFields: ["*"],
+                  relationshipId: LabsLayer.relationships[4].id,
+                  objectIds: objectId,
+                })
                 .then((results) => {
-                  // directorate
                   results[objectId].features.forEach((element) => {
-                    // console.log(element.attributes["OBJECTID_1"]);
+                    console.log(element.attributes["OBJECTID_1"]);
                   });
-                  // console.log(
-                  //   results[objectId].features[0].attributes["OBJECTID_1"]
-                  // );
+                  console.log(
+                    results[objectId].features[0].attributes["OBJECTID_1"]
+                  );
                   return results[objectId].features[0].attributes["OBJECTID_1"];
                 })
                 .then(function (oid) {
-                  // console.log(oid);
-                  return DirectorateLayer.queryRelatedFeatures({
-                    outFields: ["*"],
-                    relationshipId: DirectorateLayer.relationships[9].id,
-                    objectIds: oid,
-                  }).then((results) => {
-                    //government
-                    results[oid].features.forEach((element) => {
-                      // console.log(element.attributes["Government_Name_Arabic"]);
-                      government = element.attributes["Government_Name_Arabic"];
-                      // zoomToFeature
-                      GovernmentLayer.queryExtent({
-                        where:
-                          "OBJECTID_1 =" + element.attributes["OBJECTID_1"],
-                      }).then(function (results) {
-                        // console.log(results);
-                        view.goTo(results.extent); // go to the extent of the results satisfying the query
+                  // console.log(GovernmentID);
+                  console.log(oid);
+                  // console.log(featureLayer2);
+                  return DirectorateLayer
+                    .queryRelatedFeatures({
+                      outFields: ["*"],
+                      relationshipId: DirectorateLayer.relationships[9].id,
+                      objectIds: oid,
+                    })
+                    .then((results) => {
+                      // console.log(results[oid]);
+                      results[oid].features.forEach((element) => {
+                        console.log(element.attributes["Government_Name_Arabic"]);
+                        government = element.attributes["Government_Name_Arabic"];
+                        GovernmentLayer.queryExtent({
+                          where:
+                            "OBJECTID_1 =" + element.attributes["OBJECTID_1"],
+                        }).then(function (results) {
+                          // console.log(results);
+                          view.goTo(results.extent); // go to the extent of the results satisfying the query
+                        });
                       });
                     });
-                  });
                 });
             });
         })
+
+
+
+
+
         .then(() => {
-          // display the popupTemplate
-          WorkshopsLayer.popupTemplate = {
-            title: "{Workshop_Name}",
+          LabsLayer.popupTemplate = {
+            title: "{Lab_Name}",
             expressionInfos: [
               {
                 name: "Unused Energy",
@@ -582,18 +592,8 @@ function modelCenter() {
                 type: "custom",
                 creator: function () {
                   return (
-                    '<div class="esri-feature-fields" style="margin-top:-24px; margin-bottom:-24px;"><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody><tr><th class="esri-feature-fields__field-header">التلفون</th><td class="esri-feature-fields__field-data"> ' +
+                    '<div class="esri-feature-fields" style="margin-top:-24px; margin-bottom:-24px;"><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody><tr style="background-color:rgba(76,76,76,.02);"><th class="esri-feature-fields__field-header">التلفون</th><td class="esri-feature-fields__field-data"> ' +
                     phones.toString() +
-                    "</td></tr></tbody></table></div>"
-                  );
-                },
-              },
-              {
-                type: "custom",
-                creator: function () {
-                  return (
-                    '<div class="esri-feature-fields" style="margin-top:-24px; margin-bottom:-24px;"><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody><tr style="background-color:rgba(76,76,76,.02);"><th class="esri-feature-fields__field-header">المحافظة</th><td class="esri-feature-fields__field-data"> ' +
-                    government +
                     "</td></tr></tbody></table></div>"
                   );
                 },
@@ -603,11 +603,22 @@ function modelCenter() {
                 fieldInfos: [
                   {
                     label: "المديرية",
-                    fieldName: "relationships/21/Directorate_Name_Arabic",
+                    fieldName: "relationships/19/Directorate_Name_Arabic",
                   },
                 ],
               },
-            ],
+              {
+                // Pass in the fields to display
+                type: "custom",
+                creator: function () {
+                  return (
+                    '<div class="esri-feature-fields" style="margin-top:-24px; margin-bottom:-24px;"><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody><tr style="background-color:rgba(76,76,76,.02);"><th class="esri-feature-fields__field-header">المحافظة</th><td class="esri-feature-fields__field-data"> ' +
+                    government +
+                    "</td></tr></tbody></table></div>"
+                  );
+                },
+              },
+            ], // "The lands type number is {Type_LandID}.", // Display text in pop-up
           };
         });
     });
