@@ -6,18 +6,8 @@ function modelCenter() {
     "esri/layers/FeatureLayer",
     "esri/widgets/Legend",
     "esri/widgets/Expand",
-    "esri/layers/GraphicsLayer",
     "esri/Graphic",
-  ], function (
-    query,
-    Map,
-    MapView,
-    FeatureLayer,
-    Legend,
-    Expand,
-    GraphicsLayer,
-    Graphic
-  ) {
+  ], function (query, Map, MapView, FeatureLayer, Legend, Expand, Graphic) {
     /**
      *!  ********************************************************************************************************************************
      *! start the map filter
@@ -40,7 +30,7 @@ function modelCenter() {
     async function displayGovernments() {
       await query
         .executeQueryJSON(
-          "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/9",
+          "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/9",
           {
             outFields: ["Government_Name_Arabic", "GovernmentID"],
             where: "1=1",
@@ -67,7 +57,7 @@ function modelCenter() {
 
       await query
         .executeQueryJSON(
-          "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/6",
+          "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/6",
           {
             outFields: ["DirectorateID"],
             where: "1=1",
@@ -170,7 +160,7 @@ function modelCenter() {
       if (event) {
         query
           .executeQueryJSON(
-            "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/10",
+            "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/10",
             {
               // autocasts as new Query()
               outFields: ["*"],
@@ -206,7 +196,7 @@ function modelCenter() {
       if (Dirctorate == "default") {
         query
           .executeQueryJSON(
-            "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/9",
+            "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/9",
             {
               outFields: ["Government_Name_Arabic", "GovernmentID"],
               where: "GovernmentID =" + Goverment,
@@ -219,7 +209,7 @@ function modelCenter() {
       } else {
         query
           .executeQueryJSON(
-            "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/10",
+            "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/10",
             {
               outFields: ["Directorate_Name_Arabic", "DirectorateID"],
               where: "DirectorateID  =" + Dirctorate,
@@ -285,7 +275,121 @@ function modelCenter() {
     //variables
     ////////////////////////////////////////////////////////////////////////////////////
     let government,
+      DirectorateID,
       phones = [];
+    //? Product_Manufacturer
+    async function displayProduct_Manufacturer(objectId) {
+      Product_Manufacturer = new Object();
+      //Sell_Product_Manufacturer
+      await PointsSalesLayer.queryRelatedFeatures({
+        outFields: ["*"],
+        relationshipId: PointsSalesLayer.relationships[0].id,
+        objectIds: objectId,
+      }).then((results) => {
+        if (results[objectId]) {
+          results[objectId].features.forEach((element) => {
+            displayProductM(element);
+          });
+        }
+      });
+    }
+    //?Product_M
+    async function displayProductM(element) {
+      await query
+        .executeQueryJSON(
+          "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/29",
+          {
+            outFields: ["*"],
+            where:
+              "OBJECTID  = " + element.attributes["Product_ManufacturerID"],
+          }
+        )
+        .then((Product) => {
+          if (Product) {
+            Product_Manufacturer[element.attributes["Product_ManufacturerID"]] =
+              Array(
+                element.attributes["Quantity_Total"],
+                element.attributes["Quantity_Sold"],
+                Product.features[0].attributes["Product_Manufacturer_Name"]
+              );
+          }
+        });
+      for (let key in Product_Manufacturer) {
+        let value = Product_Manufacturer[key];
+        value.forEach((element) => {
+          // console.log(element);
+          PointsSalesLayer.popupTemplate.content.push({
+            type: "custom",
+            creator: function () {
+              return (
+                '<div class="esri-feature-fields" style="margin-top:-24px; margin-bottom:-24px;"><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody>' +
+                style(key) +
+                '<th class="esri-feature-fields__field-header"> المنتج</th><td class="esri-feature-fields__field-data"> ' +
+                element +
+                "</td></tr></tbody></table></div>"
+              );
+            },
+          });
+          console.log(key + " = " + value + "");
+        });
+      }
+    }
+    //? Product_Vegetarian
+    async function displayProduct_Vegetarian(objectId) {
+      Product_Vegetarian = new Object();
+      //Sell_Product_Vegetarian
+      PointsSalesLayer.queryRelatedFeatures({
+        outFields: ["*"],
+        relationshipId: PointsSalesLayer.relationships[1].id,
+        objectIds: objectId,
+      }).then((results) => {
+        if (results[objectId]) {
+          results[objectId].features.forEach((element) => {
+            displayProductV(element);
+          });
+        }
+      });
+    }
+    //?Product_V
+    async function displayProductV(element) {
+      await query
+        .executeQueryJSON(
+          "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/30",
+          {
+            outFields: ["*"],
+            where: "OBJECTID  = " + element.attributes["Product_VegetarianID"],
+          }
+        )
+        .then((Product) => {
+          if (Product) {
+            Product_Vegetarian[element.attributes["Product_VegetarianID"]] =
+              Array(
+                element.attributes["Quantity_Total"],
+                element.attributes["Quantity_Sold"],
+                Product.features[0].attributes["Product_Vegetarian_Name"]
+              );
+          }
+        });
+      for (let key in Product_Vegetarian) {
+        let value = Product_Vegetarian[key];
+        value.forEach((element) => {
+          console.log(element);
+          PointsSalesLayer.popupTemplate.content.push({
+            type: "custom",
+            creator: function () {
+              return (
+                '<div class="esri-feature-fields" style="margin-top:-24px; margin-bottom:-24px;"><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody>' +
+                style(key) +
+                '<th class="esri-feature-fields__field-header"> المنتج</th><td class="esri-feature-fields__field-data"> ' +
+                element +
+                "</td></tr></tbody></table></div>"
+              );
+            },
+          });
+        });
+        // console.log(key + " = " + value + "");
+      }
+    }
 
     // renderer the workshopsLayer
     // const Labs_Workshops_Renderer = {
@@ -374,7 +478,7 @@ function modelCenter() {
       } else view.goTo(this.mapExtent);
     };
     var GovernmentLayer = new FeatureLayer({
-      url: "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/9",
+      url: "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/9",
       id: "Governments",
       visible: true,
       outFields: ["Government_Name_Arabic", "GovernmentID"],
@@ -383,7 +487,7 @@ function modelCenter() {
       },
     });
     var DirectorateLayer = new FeatureLayer({
-      url: "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/10",
+      url: "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/10",
       id: "Directorates",
       visible: true,
       outFields: ["Directorate_Name_Arabic", "DirectorateID"],
@@ -392,7 +496,7 @@ function modelCenter() {
       },
     });
     var PointsSalesLayer = new FeatureLayer({
-      url: "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/6",
+      url: "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/6",
       id: "Points_Sales",
       visible: true,
       outFields: ["*"],
@@ -471,304 +575,158 @@ function modelCenter() {
         })
         .then((objectId) => {
           // phones
-          // console.log(objectId);
           return PointsSalesLayer.queryRelatedFeatures({
             outFields: ["*"],
             relationshipId: PointsSalesLayer.relationships[2].id,
             objectIds: objectId,
           })
             .then((results) => {
-              phones = [];
-              results[objectId].features.forEach((element) => {
-                // console.log(element.attributes["Phone"]);
-                phones.push(element.attributes["Phone"]);
-              });
+              if (results[objectId].features.length) {
+                phones = [];
+                results[objectId].features.forEach((element) => {
+                  phones.push(element.attributes["Phone"]);
+                });
+              } else {
+                console.log("Couldn't find any phones in the collection");
+              }
             })
             .then(() => {
               // Directorate
-              // console.log(objectId);
               return PointsSalesLayer.queryRelatedFeatures({
                 outFields: ["*"],
                 relationshipId: PointsSalesLayer.relationships[3].id,
                 objectIds: objectId,
               }).then((results) => {
-                Directorate =
-                  results[objectId].features[0].attributes[
-                  "Directorate_Name_Arabic"
-                  ];
-                // console.log(Directorate);
-                DirectorateID =
-                  results[objectId].features[0].attributes["OBJECTID_1"];
+                if (results[objectId].features.length) {
+                  Directorate =
+                    results[objectId].features[0].attributes[
+                      "Directorate_Name_Arabic"
+                    ];
+                  DirectorateID =
+                    results[objectId].features[0].attributes["OBJECTID_1"];
+                } else {
+                  console.log("Couldn't find directorate.");
+                }
               });
             })
             .then(() => {
               // government
-              // console.log(DirectorateID);
               return DirectorateLayer.queryRelatedFeatures({
                 outFields: ["*"],
                 relationshipId: DirectorateLayer.relationships[9].id,
                 objectIds: DirectorateID,
               }).then((results) => {
-                results[DirectorateID].features[0].attributes[
-                  "Government_Name_Arabic"
-                ];
-                government =
+                if (results[DirectorateID].features.length) {
                   results[DirectorateID].features[0].attributes[
-                  "Government_Name_Arabic"
+                    "Government_Name_Arabic"
                   ];
-
-                // zoomToFeature
-                GovernmentLayer.queryExtent({
-                  where:
-                    "OBJECTID_1 =" + element.attributes["OBJECTID_1"],
-                }).then(function (results) {
-                  // console.log(results);
-                  view.goTo(results.extent); // go to the extent of the results satisfying the query
-                });
-                // console.log(government);
+                  government =
+                    results[DirectorateID].features[0].attributes[
+                      "Government_Name_Arabic"
+                    ];
+                }
               });
             })
             .then(() => {
-              Product_Manufacturer = [];
-              //Sell_Product_Manufacturer
-              return PointsSalesLayer.queryRelatedFeatures({
-                outFields: ["*"],
-                relationshipId: PointsSalesLayer.relationships[0].id,
-                objectIds: objectId,
-              }).then((results) => {
-                results[objectId].features.forEach((element) => {
-                  // console.log(
-                  //   element.attributes["Product_ManufacturerID"],
-                  //   element.attributes["Quantity_Total"],
-                  //   element.attributes["Quantity_Sold"]
-                  // );
-                  //Product_Manufacturer
-                  query
-                    .executeQueryJSON(
-                      "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/29",
+              PointsSalesLayer.popupTemplate = {
+                title: "{Workshop_Name}",
+                // expressionInfos: [
+                //   {
+                //     name: "Unused Energy",
+                //     title: "الطاقة الغير مستغلة",
+                //     expression: "$feature.Maximum_Power - $feature.Actual_Power",
+                //   },
+                // ],
+                content: [
+                  {
+                    type: "fields",
+                    fieldInfos: [
                       {
-                        outFields: ["*"],
-
-                        // autocasts as new Query()
-                        where:
-                          "OBJECTID  = " +
-                          element.attributes["Product_ManufacturerID"],
-                      }
-                    )
-                    .then((Product) => {
-                      // console.log(
-                      //   Product.features[0].attributes[
-                      //     "Product_Manufacturer_Name"
-                      //   ]
-                      // ); //2
-                      Product_Manufacturer[
-                        element.attributes["Product_ManufacturerID"]
-                      ] = Array(
-                        element.attributes["Quantity_Total"],
-                        element.attributes["Quantity_Sold"],
-                        Product.features[0].attributes[
-                        "Product_Manufacturer_Name"
-                        ]
-                      );
-                      // for (let key in Product_Manufacturer) {
-                      //   let value = Product_Manufacturer[key];
-                      //   value.forEach((element) => {
-                      //     console.log(element);
-                      //   });
-                      //   console.log(key + " = " + value + "");
-                      // }
-                    });
-                });
-              });
-            })
-            .then(() => {
-              Product_Vegetarian = [];
-              //Sell_Product_Vegetarian
-              return PointsSalesLayer.queryRelatedFeatures({
-                outFields: ["*"],
-                relationshipId: PointsSalesLayer.relationships[1].id,
-                objectIds: objectId,
-              }).then((results) => {
-                results[objectId].features.forEach((element) => {
-                  // console.log(
-                  //   element.attributes["Product_VegetarianID"],
-                  //   element.attributes["Quantity_Total"],
-                  //   element.attributes["Quantity_Sold"]
-                  // );
-                  //Product_Vegetarian
-                  query
-                    .executeQueryJSON(
-                      "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/30",
+                        label: "اسم نقطة البيع",
+                        fieldName: "Ponit_Sale_Name",
+                      },
                       {
-                        outFields: ["*"],
-
-                        // autocasts as new Query()
-                        where:
-                          "OBJECTID  = " +
-                          element.attributes["Product_VegetarianID"],
-                      }
-                    )
-                    .then((Product) => {
-                      // console.log(
-                      //   Product.features[0].attributes["Product_Vegetarian_Name"]
-                      // ); //2
-                      Product_Vegetarian[
-                        element.attributes["Product_VegetarianID"]
-                      ] = Array(
-                        element.attributes["Quantity_Total"],
-                        element.attributes["Quantity_Sold"],
-                        Product.features[0].attributes["Product_Vegetarian_Name"]
+                        label: "المسؤول",
+                        fieldName: "Administrator",
+                      },
+                      {
+                        label: "الكود",
+                        fieldName: "Code",
+                      },
+                      {
+                        label: "التصريح",
+                        fieldName: "Declaration",
+                      },
+                      // {
+                      //   label: "المنتجات",
+                      //   fieldName:
+                      //     "relationships/22/relationships/45/Product_Manufacturer_Name",
+                      //   // fieldName: "relationships/23/relationships/47/Product_Vegetarian_Name",
+                      // },
+                      // {
+                      //   label: "متوسط كميةالبيع",
+                      //   fieldName: "expression/average sales quantity",
+                      //   format: {
+                      //     digitSeparator: true,
+                      //   },
+                      // },
+                    ],
+                  },
+                  {
+                    type: "custom",
+                    creator: function () {
+                      return (
+                        '<div class="esri-feature-fields" style="margin-top:-24px; margin-bottom:-24px;"><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody><tr><th class="esri-feature-fields__field-header">التلفون</th><td class="esri-feature-fields__field-data"> ' +
+                        phones.toString() +
+                        "</td></tr></tbody></table></div>"
                       );
-                      // console.log(Product_Vegetarian);
-
-                      // for (let key in Product_Vegetarian) {
-                      //   let value = Product_Vegetarian[key];
-                      //   value.forEach((element) => {
-                      //     console.log(element);
-                      //   });
-                      //   console.log(key + " = " + value + "");
-                      // }
-                      // console.log(Product_Vegetarian);
-
-                    });
-                });
-              });
-            });
-        })
-        .then(() => {
-          console.log(Product_Vegetarian);
-
-          PointsSalesLayer.popupTemplate = {
-            title: "{Workshop_Name}",
-            // expressionInfos: [
-            //   {
-            //     name: "Unused Energy",
-            //     title: "الطاقة الغير مستغلة",
-            //     expression: "$feature.Maximum_Power - $feature.Actual_Power",
-            //   },
-            // ],
-            content: [
-              {
-                type: "fields",
-                fieldInfos: [
-                  {
-                    label: "اسم نقطة البيع",
-                    fieldName: "Ponit_Sale_Name",
+                    },
                   },
                   {
-                    label: "المسؤول",
-                    fieldName: "Administrator",
+                    type: "custom",
+                    creator: function () {
+                      return (
+                        '<div class="esri-feature-fields" style="margin-top:-24px; margin-bottom:-24px;"><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody><tr style="background-color:rgba(76,76,76,.02);"><th class="esri-feature-fields__field-header">المحافظة</th><td class="esri-feature-fields__field-data"> ' +
+                        government +
+                        "</td></tr></tbody></table></div>"
+                      );
+                    },
                   },
                   {
-                    label: "الكود",
-                    fieldName: "Code",
-                  },
-                  {
-                    label: "التصريح",
-                    fieldName: "Declaration",
-                  },
-                  // {
-                  //   label: "المنتجات",
-                  //   fieldName:
-                  //     "relationships/22/relationships/45/Product_Manufacturer_Name",
-                  //   // fieldName: "relationships/23/relationships/47/Product_Vegetarian_Name",
-                  // },
-                  // {
-                  //   label: "متوسط كميةالبيع",
-                  //   fieldName: "expression/average sales quantity",
-                  //   format: {
-                  //     digitSeparator: true,
-                  //   },
-                  // },
-                ],
-              },
-              {
-                // Pass in the fields to display
-                type: "custom",
-                creator: function () {
-                  return (
-                    '<div class="esri-feature-fields" style="margin-top:-24px; margin-bottom:-24px;"><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody><tr><th class="esri-feature-fields__field-header">التلفون</th><td class="esri-feature-fields__field-data"> ' +
-                    phones.toString() +
-                    "</td></tr></tbody></table></div>"
-                  );
-                },
-              },
-              {
-                // Pass in the fields to display
-                type: "custom",
-                creator: function () {
-                  return (
-                    '<div class="esri-feature-fields" style="margin-top:-24px; margin-bottom:-24px;"><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody><tr style="background-color:rgba(76,76,76,.02);"><th class="esri-feature-fields__field-header">المحافظة</th><td class="esri-feature-fields__field-data"> ' +
-                    government +
-                    "</td></tr></tbody></table></div>"
-                  );
-                },
-              },
-              {
-                type: "fields",
-                fieldInfos: [
-                  {
-                    label: "المديرية",
-                    fieldName: "relationships/25/Directorate_Name_Arabic",
+                    type: "fields",
+                    fieldInfos: [
+                      {
+                        label: "المديرية",
+                        fieldName: "relationships/25/Directorate_Name_Arabic",
+                      },
+                    ],
                   },
                 ],
-              },
-            ], // "The lands type number is {Type_LandID}.", // Display text in pop-up
-          };
-          PointsSalesLayer.popupTemplate.content.push({
-            // Pass in the fields to display
-            type: "custom",
-            creator: function () {
-              return (
-                '<div class="esri-feature-fields" style="margin-top:-24px; "><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody>الطاقة الإنتاجية</tbody></table></div>' +
-                "</td></tr></tbody></table></div>"
-              );
-            },
-          });
-          console.log(Product_Manufacturer);
-          for (let Key in Product_Vegetarian) {
-            let value = Product_Vegetarian[Key];
-            value.forEach((element) => {
-              console.log(element);
+              };
               PointsSalesLayer.popupTemplate.content.push({
                 // Pass in the fields to display
                 type: "custom",
                 creator: function () {
                   return (
-                    '<div class="esri-feature-fields" style="margin-top:-24px; margin-bottom:-24px;"><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody>' +
-                    style(Key) +
-                    '<th class="esri-feature-fields__field-header"> المنتج</th><td class="esri-feature-fields__field-data"> ' +
-                    element +
+                    '<div class="esri-feature-fields" style="margin-top:-24px; "><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody>متوسط البيع من كل منتج</tbody></table></div>' +
                     "</td></tr></tbody></table></div>"
                   );
                 },
               });
+              displayProduct_Manufacturer(objectId);
+              displayProduct_Vegetarian(objectId);
             });
-            // console.log(key + " = " + value + "");
-          }
-
-          for (let key in Product_Manufacturer) {
-            let value = Product_Manufacturer[key];
-            value.forEach((element) => {
-              console.log(element);
-              PointsSalesLayer.popupTemplate.content.push({
-                // Pass in the fields to display
-                type: "custom",
-                creator: function () {
-                  return (
-                    '<div class="esri-feature-fields" style="margin-top:-24px; margin-bottom:-24px;"><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody>' +
-                    style(key) +
-                    '<th class="esri-feature-fields__field-header"> المنتج</th><td class="esri-feature-fields__field-data"> ' +
-                    element +
-                    "</td></tr></tbody></table></div>"
-                  );
-                },
-              });
-            });
-            // console.log(key + " = " + value + "");
-          }
         });
     });
+
+    function style(x) {
+      if (x % 2 != 0) {
+        return "<tr>";
+      } else {
+        return '<tr style="background-color:rgba(76,76,76,.02);">';
+      }
+    }
   });
 }
+
 ////////////////////////////////////////////////////////////////////////////////////
