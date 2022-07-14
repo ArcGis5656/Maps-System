@@ -272,6 +272,13 @@ function modelCenter() {
      *! start the map design
      *!  ********************************************************************************************************************************
      **/
+    function style(x) {
+      if (x % 2 != 0) {
+        return "<tr>";
+      } else {
+        return '<tr style="background-color:rgba(76,76,76,.02);">';
+      }
+    }
     //variables
     ////////////////////////////////////////////////////////////////////////////////////
     let government,
@@ -316,21 +323,20 @@ function modelCenter() {
         });
       for (let key in Product_Manufacturer) {
         let value = Product_Manufacturer[key];
-        value.forEach((element) => {
-          // console.log(element);
-          PointsSalesLayer.popupTemplate.content.push({
-            type: "custom",
-            creator: function () {
-              return (
-                '<div class="esri-feature-fields" style="margin-top:-24px; margin-bottom:-24px;"><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody>' +
-                style(key) +
-                '<th class="esri-feature-fields__field-header"> المنتج</th><td class="esri-feature-fields__field-data"> ' +
-                element +
-                "</td></tr></tbody></table></div>"
-              );
-            },
-          });
-          console.log(key + " = " + value + "");
+        let Number = (value[1] * 100) / value[0] / 100;
+        PointsSalesLayer.popupTemplate.content.push({
+          type: "custom",
+          creator: function () {
+            return (
+              '<div class="esri-feature-fields" style="margin-top:-24px; margin-bottom:-24px;"><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody>' +
+              style(key) +
+              '<th class="esri-feature-fields__field-header"> ' +
+              value[2] +
+              '</th><td class="esri-feature-fields__field-data"> ' +
+              Number.toFixed(2) +
+              " %</td></tr></tbody></table></div>"
+            );
+          },
         });
       }
     }
@@ -372,22 +378,25 @@ function modelCenter() {
         });
       for (let key in Product_Vegetarian) {
         let value = Product_Vegetarian[key];
-        value.forEach((element) => {
-          console.log(element);
-          PointsSalesLayer.popupTemplate.content.push({
-            type: "custom",
-            creator: function () {
-              return (
-                '<div class="esri-feature-fields" style="margin-top:-24px; margin-bottom:-24px;"><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody>' +
-                style(key) +
-                '<th class="esri-feature-fields__field-header"> المنتج</th><td class="esri-feature-fields__field-data"> ' +
-                element +
-                "</td></tr></tbody></table></div>"
-              );
-            },
-          });
+        let Number = (value[1] * 100) / value[0] / 100;
+        console.log(value[0]);
+        console.log(value[1]);
+        console.log(value[2]);
+        console.log(Number.toFixed(2));
+        PointsSalesLayer.popupTemplate.content.push({
+          type: "custom",
+          creator: function () {
+            return (
+              '<div class="esri-feature-fields" style="margin-top:-24px; margin-bottom:-24px;"><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody>' +
+              style(key) +
+              '<th class="esri-feature-fields__field-header"> ' +
+              value[2] +
+              '</th><td class="esri-feature-fields__field-data"> ' +
+              Number.toFixed(2) +
+              " %</td></tr></tbody></table></div>"
+            );
+          },
         });
-        // console.log(key + " = " + value + "");
       }
     }
 
@@ -713,19 +722,13 @@ function modelCenter() {
                   );
                 },
               });
+              // console.log(objectId);
               displayProduct_Manufacturer(objectId);
+              // console.log(objectId);
               displayProduct_Vegetarian(objectId);
             });
         });
     });
-
-    function style(x) {
-      if (x % 2 != 0) {
-        return "<tr>";
-      } else {
-        return '<tr style="background-color:rgba(76,76,76,.02);">';
-      }
-    }
   });
 }
 
