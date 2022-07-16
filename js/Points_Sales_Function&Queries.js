@@ -296,9 +296,10 @@ function modelCenter() {
           query.features.forEach((element) => {
             objectId = element.attributes.OBJECTID;
             displayProduct_Manufacturer(objectId, ProductM);
+            displayProduct_Vegetarian(objectId, ProductV);
           });
         });
-      console.log(JSON.stringify(averageOfSelling));
+      console.log(averageOfSelling);
     }
     Renderer();
     //? style the  popupTemplate
@@ -379,51 +380,47 @@ function modelCenter() {
         )
         .then((Product) => {
           if (Product) {
-            console.log(
-              objectId +
-                ": +++++++++++++++++++" +
-                Product.features[0].attributes["Product_Manufacturer_Name"]
-            );
-
+            let point = 0;
             let Number =
               (element.attributes["Quantity_Sold"] * 100) /
               element.attributes["Quantity_Total"] /
               100;
+
             if (Object.keys(averageOfSelling).length) {
               for (let key in averageOfSelling) {
-                if (key == objectId) {
+                if (objectId == key) {
                   averageOfSelling[objectId].push(
                     Array(
                       Product.features[0].attributes[
                         "Product_Manufacturer_Name"
                       ],
-                      Number
+                      Number.toFixed(2)
                     )
                   );
-                } else {
-                  averageOfSelling[objectId] = [
-                    Array(
-                      Product.features[0].attributes[
-                        "Product_Manufacturer_Name"
-                      ],
-                      Number
-                    ),
-                  ];
+                  point++;
                 }
+              }
+              if (point == 0) {
+                averageOfSelling[objectId] = [
+                  [
+                    Product.features[0].attributes["Product_Manufacturer_Name"],
+                    Number.toFixed(2),
+                  ],
+                ];
               }
             } else {
               averageOfSelling[objectId] = [
-                Array(
+                [
                   Product.features[0].attributes["Product_Manufacturer_Name"],
-                  Number
-                ),
+                  Number.toFixed(2),
+                ],
               ];
             }
           }
         });
     }
     //? Product_Vegetarian
-    async function displayProduct_Vegetarian(objectId) {
+    async function displayProduct_Vegetarian(objectId, callback) {
       Product_Vegetarian = new Object();
       //Sell_Product_Vegetarian
       PointsSalesLayer.queryRelatedFeatures({
@@ -433,7 +430,7 @@ function modelCenter() {
       }).then((results) => {
         if (results[objectId]) {
           results[objectId].features.forEach((element) => {
-            displayProductV(element);
+            callback(element, objectId);
           });
         }
       });
@@ -480,6 +477,55 @@ function modelCenter() {
           },
         });
       }
+    }
+    //?Product_V of renderering
+    async function ProductV(element, objectId) {
+      await query
+        .executeQueryJSON(
+          "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/30",
+          {
+            outFields: ["*"],
+            where: "OBJECTID  = " + element.attributes["Product_VegetarianID"],
+          }
+        )
+        .then((Product) => {
+          if (Product) {
+            let point = 0;
+            let Number =
+              (element.attributes["Quantity_Sold"] * 100) /
+              element.attributes["Quantity_Total"] /
+              100;
+
+            if (Object.keys(averageOfSelling).length) {
+              for (let key in averageOfSelling) {
+                if (objectId == key) {
+                  averageOfSelling[objectId].push(
+                    Array(
+                      Product.features[0].attributes["Product_Vegetarian_Name"],
+                      Number.toFixed(2)
+                    )
+                  );
+                  point++;
+                }
+              }
+              if (point == 0) {
+                averageOfSelling[objectId] = [
+                  [
+                    Product.features[0].attributes["Product_Vegetarian_Name"],
+                    Number.toFixed(2),
+                  ],
+                ];
+              }
+            } else {
+              averageOfSelling[objectId] = [
+                [
+                  Product.features[0].attributes["Product_Vegetarian_Name"],
+                  Number.toFixed(2),
+                ],
+              ];
+            }
+          }
+        });
     }
 
     // renderer the workshopsLayer
@@ -807,8 +853,8 @@ function modelCenter() {
                 });
                 // console.log(objectId);
                 await displayProduct_Manufacturer(objectId, displayProductM);
-                // console.log(objectId);
-                await displayProduct_Vegetarian(objectId);
+
+                await displayProduct_Vegetarian(objectId, displayProductV);
               }
               popupTemplate();
             });
