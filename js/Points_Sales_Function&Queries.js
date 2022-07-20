@@ -37,11 +37,12 @@ function modelCenter() {
               where: "1=1",
             }
           )
-          .then(function (result) {
-            result.features.forEach((element) => {
+          .then(async function (result) {
+            for await (const element of result.features) {
+              // result.features.forEach((element) => {
               Governments[element.attributes.GovernmentID] =
                 element.attributes.Government_Name_Arabic;
-            });
+            }
           });
 
         for (let key in Governments) {
@@ -169,8 +170,8 @@ function modelCenter() {
                 where: "GovernmentID =" + Goverment_id,
               }
             )
-            .then(function (results) {
-              displayDirectorates(results.features);
+            .then(async function (results) {
+              await displayDirectorates(results.features);
             });
         }
       });
@@ -205,8 +206,8 @@ function modelCenter() {
                 returnGeometry: true,
               }
             )
-            .then(function (result) {
-              highlightSelection(result.features[0]);
+            .then(async function (result) {
+              await highlightSelection(result.features[0]);
             });
         } else {
           query
@@ -218,8 +219,8 @@ function modelCenter() {
                 returnGeometry: true,
               }
             )
-            .then(function (result) {
-              highlightSelection(result.features[0]);
+            .then(async function (result) {
+              await highlightSelection(result.features[0]);
             });
         }
       };
@@ -283,23 +284,39 @@ function modelCenter() {
     //functions
     //? renderering
     async function Renderer() {
-      averageOfSelling = new Object();
-      await query
-        .executeQueryJSON(
-          "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/6",
-          {
-            outFields: ["OBJECTID"],
-            where: "1=1",
-          }
-        )
-        .then(function (query) {
-          query.features.forEach((element) => {
-            objectId = element.attributes.OBJECTID;
-            displayProduct_Manufacturer(objectId, ProductM);
-            displayProduct_Vegetarian(objectId, ProductV);
+      try {
+        averageOfSelling = new Object();
+        await query
+          .executeQueryJSON(
+            "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/6",
+            {
+              outFields: ["OBJECTID"],
+              where: "1=1",
+            }
+          )
+          .then(async function (query) {
+            // query.features.forEach((element) => {
+            // console.log(Object.keys(query.features).length);
+            for await (const element of query.features) {
+              objectId = element.attributes.OBJECTID;
+              await displayProduct_Vegetarian(objectId, ProductV);
+              await displayProduct_Manufacturer(objectId, ProductM);
+            }
           });
-        });
-      console.log(averageOfSelling);
+        console.log(averageOfSelling);
+        let i = 0;
+        async function printArrayOfSelling(i, averageOfSelling) {
+          for await (const element of averageOfSelling) {
+            console.log(element);
+            i++;
+          }
+          console.log(Array.from(averageOfSelling));
+        };
+        printArrayOfSelling(i, averageOfSelling)
+        console.log( Object.entries(averageOfSelling));
+      } catch (e) {
+        console.log(e);
+      }
     }
     Renderer();
     //? style the  popupTemplate
@@ -313,19 +330,24 @@ function modelCenter() {
 
     //? Product_Manufacturer
     async function displayProduct_Manufacturer(objectId, callback) {
-      Product_Manufacturer = new Object();
-      //Sell_Product_Manufacturer
-      await PointsSalesLayer.queryRelatedFeatures({
-        outFields: ["*"],
-        relationshipId: PointsSalesLayer.relationships[0].id,
-        objectIds: objectId,
-      }).then((results) => {
-        if (results[objectId]) {
-          results[objectId].features.forEach((element) => {
-            callback(element, objectId);
-          });
-        }
-      });
+      try {
+        Product_Manufacturer = new Object();
+        //Sell_Product_Manufacturer
+        await PointsSalesLayer.queryRelatedFeatures({
+          outFields: ["*"],
+          relationshipId: PointsSalesLayer.relationships[0].id,
+          objectIds: objectId,
+        }).then(async (results) => {
+          if (results[objectId]) {
+            for await (const element of results[objectId].features) {
+              // results[objectId].features.forEach((element) => {
+           await callback(element, objectId);
+            }
+          }
+        });
+      } catch (err) {
+        console.log(err);
+      }
     }
     //?Product_M
     async function displayProductM(element) {
@@ -369,38 +391,49 @@ function modelCenter() {
     }
     //?Product_M of renderering
     async function ProductM(element, objectId) {
-      await query
-        .executeQueryJSON(
-          "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/29",
-          {
-            outFields: ["*"],
-            where:
-              "OBJECTID  = " + element.attributes["Product_ManufacturerID"],
-          }
-        )
-        .then((Product) => {
-          if (Product) {
-            let point = 0;
-            let Number =
-              (element.attributes["Quantity_Sold"] * 100) /
-              element.attributes["Quantity_Total"] /
-              100;
+      try {
+        await query
+          .executeQueryJSON(
+            "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/29",
+            {
+              outFields: ["*"],
+              where:
+                "OBJECTID  = " + element.attributes["Product_ManufacturerID"],
+            }
+          )
+          .then((Product) => {
+            if (Product) {
+              let point = 0;
+              let Number =
+                (element.attributes["Quantity_Sold"] * 100) /
+                element.attributes["Quantity_Total"] /
+                100;
 
-            if (Object.keys(averageOfSelling).length) {
-              for (let key in averageOfSelling) {
-                if (objectId == key) {
-                  averageOfSelling[objectId].push(
-                    Array(
+              if (Object.keys(averageOfSelling).length) {
+                for (let key in averageOfSelling) {
+                  if (objectId == key) {
+                    averageOfSelling[objectId].push(
+                      Array(
+                        Product.features[0].attributes[
+                          "Product_Manufacturer_Name"
+                        ],
+                        Number.toFixed(2)
+                      )
+                    );
+                    point++;
+                  }
+                }
+                if (point == 0) {
+                  averageOfSelling[objectId] = [
+                    [
                       Product.features[0].attributes[
                         "Product_Manufacturer_Name"
                       ],
-                      Number.toFixed(2)
-                    )
-                  );
-                  point++;
+                      Number.toFixed(2),
+                    ],
+                  ];
                 }
-              }
-              if (point == 0) {
+              } else {
                 averageOfSelling[objectId] = [
                   [
                     Product.features[0].attributes["Product_Manufacturer_Name"],
@@ -408,32 +441,32 @@ function modelCenter() {
                   ],
                 ];
               }
-            } else {
-              averageOfSelling[objectId] = [
-                [
-                  Product.features[0].attributes["Product_Manufacturer_Name"],
-                  Number.toFixed(2),
-                ],
-              ];
             }
-          }
-        });
+          });
+      } catch (e) {
+        console.log(e);
+      }
     }
     //? Product_Vegetarian
     async function displayProduct_Vegetarian(objectId, callback) {
-      Product_Vegetarian = new Object();
-      //Sell_Product_Vegetarian
-      PointsSalesLayer.queryRelatedFeatures({
-        outFields: ["*"],
-        relationshipId: PointsSalesLayer.relationships[1].id,
-        objectIds: objectId,
-      }).then((results) => {
-        if (results[objectId]) {
-          results[objectId].features.forEach((element) => {
-            callback(element, objectId);
-          });
-        }
-      });
+      try {
+        Product_Vegetarian = new Object();
+        //Sell_Product_Vegetarian
+        PointsSalesLayer.queryRelatedFeatures({
+          outFields: ["*"],
+          relationshipId: PointsSalesLayer.relationships[1].id,
+          objectIds: objectId,
+        }).then(async (results) => {
+          if (results[objectId]) {
+            for await (const element of results[objectId].features) {
+              // results[objectId].features.forEach((element) => {
+              callback(element, objectId);
+            }
+          }
+        });
+      } catch (e) {
+        console.log(e);
+      }
     }
     //?Product_V
     async function displayProductV(element) {
@@ -480,35 +513,47 @@ function modelCenter() {
     }
     //?Product_V of renderering
     async function ProductV(element, objectId) {
-      await query
-        .executeQueryJSON(
-          "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/30",
-          {
-            outFields: ["*"],
-            where: "OBJECTID  = " + element.attributes["Product_VegetarianID"],
-          }
-        )
-        .then((Product) => {
-          if (Product) {
-            let point = 0;
-            let Number =
-              (element.attributes["Quantity_Sold"] * 100) /
-              element.attributes["Quantity_Total"] /
-              100;
+      try {
+        await query
+          .executeQueryJSON(
+            "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/30",
+            {
+              outFields: ["*"],
+              where:
+                "OBJECTID  = " + element.attributes["Product_VegetarianID"],
+            }
+          )
+          .then((Product) => {
+            if (Product) {
+              let point = 0;
+              let Number =
+                (element.attributes["Quantity_Sold"] * 100) /
+                element.attributes["Quantity_Total"] /
+                100;
 
-            if (Object.keys(averageOfSelling).length) {
-              for (let key in averageOfSelling) {
-                if (objectId == key) {
-                  averageOfSelling[objectId].push(
-                    Array(
-                      Product.features[0].attributes["Product_Vegetarian_Name"],
-                      Number.toFixed(2)
-                    )
-                  );
-                  point++;
+              if (Object.keys(averageOfSelling).length) {
+                for (let key in averageOfSelling) {
+                  if (objectId == key) {
+                    averageOfSelling[objectId].push(
+                      Array(
+                        Product.features[0].attributes[
+                          "Product_Vegetarian_Name"
+                        ],
+                        Number.toFixed(2)
+                      )
+                    );
+                    point++;
+                  }
                 }
-              }
-              if (point == 0) {
+                if (point == 0) {
+                  averageOfSelling[objectId] = [
+                    [
+                      Product.features[0].attributes["Product_Vegetarian_Name"],
+                      Number.toFixed(2),
+                    ],
+                  ];
+                }
+              } else {
                 averageOfSelling[objectId] = [
                   [
                     Product.features[0].attributes["Product_Vegetarian_Name"],
@@ -516,16 +561,11 @@ function modelCenter() {
                   ],
                 ];
               }
-            } else {
-              averageOfSelling[objectId] = [
-                [
-                  Product.features[0].attributes["Product_Vegetarian_Name"],
-                  Number.toFixed(2),
-                ],
-              ];
             }
-          }
-        });
+          });
+      } catch (e) {
+        console.log(e);
+      }
     }
 
     // renderer the workshopsLayer
