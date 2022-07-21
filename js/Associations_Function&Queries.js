@@ -285,8 +285,18 @@ function modelCenter() {
     //variables
     ///////////////////////////////////////////////////////////////////////////////////
     let government,
+      flag,
       phones = [];
+    product = new Object();
 
+    //? style the  popupTemplate
+    function style(x) {
+      if (x % 2 != 0) {
+        return "<tr>";
+      } else {
+        return '<tr style="background-color:rgba(76,76,76,.02);">';
+      }
+    }
     // renderer the workshopsLayer
     const AssociationsRenderer = {
       type: "unique-value", // autocasts as new UniqueValueRenderer()
@@ -383,7 +393,11 @@ function modelCenter() {
       id: "Associations",
       visible: true,
       outFields: ["*"],
-      renderer:AssociationsRenderer,
+      renderer: AssociationsRenderer,
+    });
+    var landsLayer = new FeatureLayer({
+      url: "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/11",
+      visible: false,
     });
     /*****************************************************************
      *! Layers may be added to the map in the map's constructor
@@ -396,6 +410,7 @@ function modelCenter() {
     map.add(GovernmentLayer); // adds the layer to the map
     map.add(DirectorateLayer); // adds the layer to the map
     map.add(AssociationsLayer); // adds the layer to the map
+    map.add(landsLayer); // adds the layer to the map
     /*****************************************************************/
 
     var view = new MapView({
@@ -439,13 +454,11 @@ function modelCenter() {
     /*****************************************************************
      *! the point queries
      *****************************************************************/
-
     view.on("click", (event) => {
       // only include graphics from hurricanesLayer in the hitTest
       const opts = {
         include: AssociationsLayer,
       };
-
       view
         .hitTest(event, opts)
         .then((response) => {
@@ -457,14 +470,16 @@ function modelCenter() {
           }
         })
         .then((objectId) => {
-          // all queries
+          product = new Object();
+          flag=0;
           return AssociationsLayer.queryRelatedFeatures({
             outFields: ["*"],
-            relationshipId:AssociationsLayer.relationships[0].id,
+            relationshipId: AssociationsLayer.relationships[1].id,
             objectIds: objectId,
           })
             .then((results) => {
-              //phones
+              //Phones
+              // console.log(results);
               phones = [];
               results[objectId].features.forEach((element) => {
                 // console.log(element.attributes["Phone"]);
@@ -472,64 +487,166 @@ function modelCenter() {
               });
             })
             .then(function () {
+              //union
+              // console.log(objectId);
               return AssociationsLayer.queryRelatedFeatures({
                 outFields: ["*"],
-                relationshipId: AssociationsLayer.relationships[1].id,
+                relationshipId: AssociationsLayer.relationships[3].id,
                 objectIds: objectId,
-              })
-                .then((results) => {
-                  // directorate
-                  results[objectId].features.forEach((element) => {
-                    // console.log(element.attributes["OBJECTID_1"]);
-                  });
-                  // console.log(
-                  //   results[objectId].features[0].attributes["OBJECTID_1"]
-                  // );
-                  return results[objectId].features[0].attributes["OBJECTID_1"];
-                })
-                .then(function (oid) {
-                  // console.log(oid);
-                  return DirectorateLayer.queryRelatedFeatures({
-                    outFields: ["*"],
-                    relationshipId: DirectorateLayer.relationships[9].id,
-                    objectIds: oid,
-                  }).then((results) => {
-                    //government
-                    results[oid].features.forEach((element) => {
-                      // console.log(element.attributes["Government_Name_Arabic"]);
-                      government = element.attributes["Government_Name_Arabic"];
-                      // zoomToFeature
-                      GovernmentLayer.queryExtent({
-                        where:
-                          "OBJECTID_1 =" + element.attributes["OBJECTID_1"],
-                      }).then(function (results) {
-                        // console.log(results);
-                        view.goTo(results.extent); // go to the extent of the results satisfying the query
-                      });
-                    });
+              }).then((results) => {
+                results[objectId].features.forEach((element) => {
+                  // console.log(element.attributes["Union_Name"]);
+                  Union = element.attributes["Union_Name"];
+                });
+              });
+            })
+            .then(function () {
+              //directorate
+              // console.log(objectId);
+              return AssociationsLayer.queryRelatedFeatures({
+                outFields: ["*"],
+                relationshipId: AssociationsLayer.relationships[2].id,
+                objectIds: objectId,
+              }).then((results) => {
+                results[objectId].features.forEach((element) => {
+                  // console.log(element.attributes["Directorate_Name_Arabic"]);
+                  Directorate = element.attributes["Directorate_Name_Arabic"];
+                  DirectorateID = element.attributes["OBJECTID_1"];
+                });
+              });
+            })
+            .then(function () {
+              //government
+              return AssociationsLayer.queryRelatedFeatures({
+                outFields: ["*"],
+                relationshipId: AssociationsLayer.relationships[2].id,
+                objectIds: objectId,
+              }).then((results) => {
+                let DirectorateID =
+                  results[objectId].features[0].attributes["OBJECTID_1"];
+                return DirectorateLayer.queryRelatedFeatures({
+                  outFields: ["*"],
+                  relationshipId: DirectorateLayer.relationships[9].id,
+                  objectIds: DirectorateID,
+                }).then((results) => {
+                  // console.log(results[DirectorateID]);
+                  results[DirectorateID].features.forEach((element) => {
+                    // console.log(element.attributes["Government_Name_Arabic"]);
+                    government = element.attributes["Government_Name_Arabic"];
                   });
                 });
+              });
+            })
+            .then(function () {
+              //! products
+              // console.log(objectId);
+              //? directorates
+              // console.log(DirectorateID);
+              //? lands in directorate
+              return DirectorateLayer.queryRelatedFeatures({
+                outFields: ["*"],
+                relationshipId: DirectorateLayer.relationships[7].id,
+                objectIds: DirectorateID,
+              }).then((results) => {
+                if (results[DirectorateID]) {
+                  for (const land of results[DirectorateID].features) {
+                    if (land.attributes["Type_Land"] == 0) {
+                      //Result_Product_Vegetarian
+                      landsLayer
+                        .queryRelatedFeatures({
+                          outFields: ["*"],
+                          relationshipId: landsLayer.relationships[0].id,
+                          objectIds: land.attributes["OBJECTID"],
+                        })
+                        .then((results) => {
+                          if (results[land.attributes["OBJECTID"]]) {
+                            results[
+                              land.attributes["OBJECTID"]
+                            ].features.forEach((element) => {
+                              // Product_Vegetarian
+                              query
+                                .executeQueryJSON(
+                                  "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/30",
+                                  {
+                                    outFields: ["*"],
+                                    where:
+                                      "OBJECTID  = " +
+                                      element.attributes[
+                                        "Product_VegetarianID"
+                                      ],
+                                  }
+                                )
+                                .then((Product_Vegetarian) => {
+                                  if (Product_Vegetarian.features.length) {
+                                    let r,
+                                      point = 0;
+                                    r =
+                                      Product_Vegetarian.features[0].attributes[
+                                        "Product_Vegetarian_Name"
+                                      ];
+                                    if (!Object.keys(product).length) {
+                                      product[r] =
+                                        element.attributes[
+                                          "Quantity_Production_Actual"
+                                        ];
+                                    } else {
+                                      for (let key in product) {
+                                        if (key == r) {
+                                          product[key] +=
+                                            element.attributes[
+                                              "Quantity_Production_Actual"
+                                            ];
+                                          point++;
+                                        }
+                                      }
+                                      if (point == 0) {
+                                        product[r] =
+                                          element.attributes[
+                                            "Quantity_Production_Actual"
+                                          ];
+                                      }
+                                    }
+                                  } else {
+                                    // console.log(
+                                    //   "the product is not availableFields"
+                                    // );
+                                  }
+                                });
+                            });
+                          } else {
+                            // console.log("the land is not has product");
+                          }
+                        });
+                    } else {
+                      // console.log("the land is not farmed");
+                    }
+                  }
+                } else {
+                  flag++;
+                  console.log("the directorate has no lands");
+                }
+              });
+              // console.log(product);
+            })
+            .then(() => {
+              return AssociationsLayer.queryRelatedFeatures({
+                outFields: ["*"],
+                relationshipId: AssociationsLayer.relationships[0].id,
+                objectIds: objectId,
+              }).then((results) => {
+                Member_Association = results[objectId].features.length;
+              });
             });
         })
         .then(() => {
-          // display the popupTemplate
           AssociationsLayer.popupTemplate = {
-            title: "{Workshop_Name}",
-            expressionInfos: [
-              {
-                name: "Unused Energy",
-                title: "الطاقة الغير مستغلة",
-                expression: "$feature.Maximum_Power - $feature.Actual_Power",
-              },
-            ],
+            title: "{Association_Name}",
             content: [
               {
+                // Pass in the fields to display
                 type: "fields",
                 fieldInfos: [
-                  {
-                    label: "اسم المعمل",
-                    fieldName: "Lab_Name",
-                  },
+                  { label: "اسم الجمعية", fieldName: "Association_Name" },
                   {
                     label: "المسؤول",
                     fieldName: "Administrator",
@@ -543,27 +660,21 @@ function modelCenter() {
                     fieldName: "Declaration",
                   },
                   {
-                    label: "الطاقة القصوى",
-                    fieldName: "Maximum_Power",
-                    format: {
-                      digitSeparator: true,
-                    },
-                  },
-                  {
-                    label: "الطاقة الفعلية",
-                    fieldName: "Actual_Power",
-                    format: {
-                      digitSeparator: true,
-                    },
-                  },
-                  {
-                    label: "الطاقة الغير مستغلة",
-                    fieldName: "expression/Unused Energy",
-                    format: {
-                      digitSeparator: true,
-                    },
+                    label: "الأداء",
+                    fieldName: "Performance",
                   },
                 ],
+              },
+              {
+                // Pass in the fields to display
+                type: "custom",
+                creator: function () {
+                  return (
+                    '<div class="esri-feature-fields" style="margin-top:-24px; margin-bottom:-24px;"><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody><tr style="background-color:rgba(76,76,76,.02);"><th class="esri-feature-fields__field-header">عدد الأعضاء</th><td class="esri-feature-fields__field-data"> ' +
+                    Member_Association +
+                    "</td></tr></tbody></table></div>"
+                  );
+                },
               },
               {
                 // Pass in the fields to display
@@ -577,6 +688,29 @@ function modelCenter() {
                 },
               },
               {
+                // Pass in the fields to display
+                type: "custom",
+                creator: function () {
+                  return (
+                    '<div class="esri-feature-fields" style="margin-top:-24px; margin-bottom:-24px;"><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody><tr style="background-color:rgba(76,76,76,.02);"><th class="esri-feature-fields__field-header">المديرية</th><td class="esri-feature-fields__field-data"> ' +
+                    Directorate +
+                    "</td></tr></tbody></table></div>"
+                  );
+                },
+              },
+              {
+                // Pass in the fields to display
+                type: "custom",
+                creator: function () {
+                  return (
+                    '<div class="esri-feature-fields" style="margin-top:-24px; margin-bottom:-24px;"><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody><tr><th class="esri-feature-fields__field-header">الإتحاد</th><td class="esri-feature-fields__field-data"> ' +
+                    Union +
+                    "</td></tr></tbody></table></div>"
+                  );
+                },
+              },
+              {
+                // Pass in the fields to display
                 type: "custom",
                 creator: function () {
                   return (
@@ -586,19 +720,38 @@ function modelCenter() {
                   );
                 },
               },
-              {
-                type: "fields",
-                fieldInfos: [
-                  {
-                    label: "المديرية",
-                    fieldName: "relationships/21/Directorate_Name_Arabic",
-                  },
-                ],
-              },
-            ],
+            ], // "The lands type number is {Type_LandID}.", // Display text in pop-up
           };
+
+          if (flag == 0) {
+            AssociationsLayer.popupTemplate.content.push({
+              type: "custom",
+              creator: function () {
+                return '<div class="esri-feature-fields" style="margin-top:-24px; "><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody>الطاقة الإنتاجية</tbody></table></div>';
+              },
+            });
+          }
+          for (let key in product) {
+            console.log(product[key]);
+            AssociationsLayer.popupTemplate.content.push({
+              // Pass in the fields to display
+              type: "custom",
+              creator: function () {
+                return (
+                  '<div class="esri-feature-fields" style="margin-top:-24px; margin-bottom:-24px;"><div class="esri-feature-element-info"></div><table class="esri-widget__table" summary="قائمة البيانات الجدولية والقيم"><tbody>' +
+                  style(key) +
+                  '<th class="esri-feature-fields__field-header"> ' +
+                  key +
+                  '</th><td class="esri-feature-fields__field-data"> ' +
+                  product[key] +
+                  " %</td></tr></tbody></table></div>"
+                );
+              },
+            });
+          }
         });
     });
   });
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
