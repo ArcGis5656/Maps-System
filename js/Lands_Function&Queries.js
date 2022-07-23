@@ -24,8 +24,7 @@ function modelProduct() {
      *!  ********************************************************************************************************************************
      **/
     //variables
-    let Governments = new Object(),
-      Directorates = new Object(),
+    let Directorates = new Object(),
       Products = new Object(),
       Lands = new Object(),
       Products_lands = [],
@@ -48,33 +47,29 @@ function modelProduct() {
           {
             outFields: ["Government_Name_Arabic", "GovernmentID"],
             where: "1=1",
+            returnGeometry: true,
           }
         )
         .then(function (result) {
+          //first is null for the zoom
+          // SelectGov.empty();
+          var optionSelectGov = document.createElement("option");
+          optionSelectGov.dataset.value = "default";
+          optionSelectGov.text = "";
+          optionSelectGov.selected = true;
+          selectedGov.appendChild(optionSelectGov);
+          // the rest
           result.features.forEach((element) => {
-            Governments[element.attributes.GovernmentID] =
-              element.attributes.Government_Name_Arabic;
+            var optionSelectGov = document.createElement("option");
+            optionSelectGov.dataset.value = JSON.stringify(element);
+            optionSelectGov.text = element.attributes.Government_Name_Arabic;
+            selectedGov.appendChild(optionSelectGov);
           });
         });
-      //first is null for the zoom
-      // SelectGov.empty();
-
-      var optionSelectGov = document.createElement("option");
-      optionSelectGov.value = "default";
-      optionSelectGov.text = "";
-      selectedGov.appendChild(optionSelectGov);
-      // the rest
-      for (let key in Governments) {
-        var optionSelectGov = document.createElement("option");
-        optionSelectGov.value = key;
-        optionSelectGov.text = Governments[key];
-        selectedGov.appendChild(optionSelectGov);
-      }
     }
 
     //? directorates
     async function displayDirectorates(DirectorateObject) {
-      // console.log(DirectorateObject);
       Directorates = new Object();
 
       await query
@@ -86,28 +81,32 @@ function modelProduct() {
           }
         )
         .then((results) => {
+          Directorates_Lands = [];
           results.features.forEach((element) => {
-            Directorates_Lands.push(element.attributes.DrectorateID);
+            Directorates_Lands.push(element);
           });
         });
+
       for (let i = 0; i < DirectorateObject.length; i++) {
         for (let j = 0; j < Directorates_Lands.length; j++) {
           if (
             DirectorateObject[i].attributes.DirectorateID ===
-            Directorates_Lands[j]
+            Directorates_Lands[j].attributes.DrectorateID
           ) {
             if (Object.keys(Directorates).length) {
-              for (let z = 0; z < Object.keys(Directorates).length; z++) {
-                if (Directorates_Lands[j] !== Directorates[z]) {
-                  Directorates[DirectorateObject[i].attributes.DirectorateID] =
-                    DirectorateObject[i].attributes.Directorate_Name_Arabic;
-                } else {
-                  // console.log("found it in directorates");
+              point = 0;
+              for (const key in Directorates) {
+                if (DirectorateObject[i].attributes.DrectorateID == key) {
+                  point++;
                 }
+              }
+              if (point == 0) {
+                Directorates[DirectorateObject[i].attributes.DirectorateID] =
+                  DirectorateObject[i];
               }
             } else {
               Directorates[DirectorateObject[i].attributes.DirectorateID] =
-                DirectorateObject[i].attributes.Directorate_Name_Arabic;
+                DirectorateObject[i];
             }
           }
         }
@@ -115,14 +114,16 @@ function modelProduct() {
       //first is null for the zoom
       // selectedDir.empty();
       let optionSelectDir = document.createElement("option");
-      optionSelectDir.value = "default";
+      optionSelectDir.dataset.value = "default";
       optionSelectDir.text = "";
+      optionSelectDir.selected = true;
       selectedDir.appendChild(optionSelectDir);
       // the rest
-      for (let key in Directorates) {
+      for (let element in Directorates) {
+        element = Directorates[element];
         let optionSelectDir = document.createElement("option");
-        optionSelectDir.value = key;
-        optionSelectDir.text = Directorates[key];
+        optionSelectDir.dataset.value = JSON.stringify(element);
+        optionSelectDir.text = element.attributes.Directorate_Name_Arabic;
         selectedDir.appendChild(optionSelectDir);
       }
     }
@@ -136,6 +137,7 @@ function modelProduct() {
           {
             outFields: ["*"],
             where: "1=1",
+            returnGeometry: true,
           }
         )
         .then(function (result) {
@@ -168,6 +170,7 @@ function modelProduct() {
       let optionSelectLand = document.createElement("option");
       optionSelectLand.value = "default";
       optionSelectLand.text = "";
+      optionSelectLand.selected = true;
       selectedLand.appendChild(optionSelectLand);
       // the rest
       for (let key in Lands) {
@@ -201,8 +204,6 @@ function modelProduct() {
           }
         )
         .then(function (result) {
-          console.log(result);
-
           result.features.forEach((element) => {
             Products_lands[element.attributes.Product_VegetarianID] =
               element.attributes.Product_Vegetarian_Name;
@@ -223,6 +224,7 @@ function modelProduct() {
       var optionSelectProduct = document.createElement("option");
       optionSelectProduct.value = "default";
       optionSelectProduct.text = "";
+      optionSelectProduct.selected = true;
       selectedProduct.appendChild(optionSelectProduct);
       // the rest
       for (let key in Products) {
@@ -234,7 +236,7 @@ function modelProduct() {
     }
 
     //Highlight the selected polygon
-    const highlightSelection = (feature) => {
+    const highlightSelection = (feature, flag) => {
       if (feature.key != 0) {
         var polygon = {
           type: "polygon",
@@ -258,8 +260,10 @@ function modelProduct() {
           symbol: simpleFillSymbol,
           attributes: attributes,
         });
-        view.graphics.add(polygonGraphic);
-        view.goTo(polygonGraphic.geometry.extent);
+        if (flag != 0) {
+          view.graphics.add(polygonGraphic);
+        }
+        return polygonGraphic;
       } else view.goTo(this.mapExtent);
     };
     /*****************************************************************
@@ -310,11 +314,18 @@ function modelProduct() {
     selectedDir.classList.add("form-control");
 
     selectedGov.addEventListener("change", function (event) {
+      var length = selectedLand.options.length;
+      for (i = length - 1; i >= 0; i--) {
+        selectedLand.options[i] = null;
+      }
       var length = selectedDir.options.length;
       for (i = length - 1; i >= 0; i--) {
         selectedDir.options[i] = null;
       }
-      Goverment_id = selectedGov.options[selectedGov.selectedIndex].value;
+
+      Goverment_id = JSON.parse(
+        selectedGov.options[selectedGov.selectedIndex].dataset.value
+      ).attributes["GovernmentID"];
       if (event) {
         query
           .executeQueryJSON(
@@ -323,6 +334,7 @@ function modelProduct() {
               // autocasts as new Query()
               outFields: ["*"],
               where: "GovernmentID =" + Goverment_id,
+              returnGeometry: true,
             }
           )
           .then(function (results) {
@@ -346,7 +358,10 @@ function modelProduct() {
       for (i = length - 1; i >= 0; i--) {
         selectedLand.options[i] = null;
       }
-      Drectorate_id = selectedDir.options[selectedDir.selectedIndex].value;
+
+      Drectorate_id = JSON.parse(
+        selectedDir.options[selectedDir.selectedIndex].dataset.value
+      ).attributes.OBJECTID_1;
       if (e) {
         query
           .executeQueryJSON(
@@ -366,12 +381,12 @@ function modelProduct() {
 
     //begining of building label Product  with list
     let labelProduct = document.createElement("label");
-    labelProduct.setAttribute("id", "lable");
     labelProduct.hidden = true;
     labelProduct.style.color = "black";
     labelProduct.style.float = "right";
     let labelProductContent = document.createTextNode("المنتج");
     let selectedProduct = document.createElement("select");
+    selectedProduct.setAttribute("id", "product");
     let divProduct = document.createElement("div");
     divProduct.appendChild(labelProduct);
     divProduct.appendChild(selectedProduct);
@@ -380,7 +395,6 @@ function modelProduct() {
     selectedProduct.classList.add("form-control");
     selectedLand.addEventListener("change", async function (e) {
       type = selectedLand.options[selectedLand.selectedIndex].value;
-      console.log(type);
       if (type == 0) {
         labelProduct.hidden = false;
         selectedProduct.hidden = false;
@@ -462,72 +476,70 @@ function modelProduct() {
     display.onclick = function () {
       view.graphics.removeAll();
       var select1 = document.getElementById("Goverment");
-      var Goverment = select1.options[select1.selectedIndex].value;
-      var select2 = document.getElementById("Dirctorate");
-      var Dirctorate = select2.options[select2.selectedIndex].value;
-      var select3 = document.getElementById("type");
-      var type = select3.options[select3.selectedIndex].value;
-      let select4 = document.getElementById("product");
-      var product = select4.options[select4.selectedIndex].value;
+      var Goverment = select1.options[select1.selectedIndex].dataset.value;
       if (Goverment != "default") {
-        query
-          .executeQueryJSON(
-            "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/9",
-            {
-              outFields: ["GovernmentID"],
-              where: "GovernmentID =" + Goverment,
-              returnGeometry: true,
-            }
-          )
-          .then(function (result) {
-            if (type != "default") {
+        var select2 = document.getElementById("Dirctorate");
+        var Dirctorate = select2.options[select2.selectedIndex].dataset.value;
+        if (Dirctorate != "default") {
+          var select3 = document.getElementById("type");
+          var type = select3.options[select3.selectedIndex].value;
+          if (type != "default") {
+            if (type == 0) {
+              let select4 = document.getElementById("product");
+              var product = select4.options[select4.selectedIndex].value;
+              if (product != "default") {
+                console.log("Product: " + product);
+              } else {
+                query
+                  .executeQueryJSON(
+                    "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/11",
+                    {
+                      outFields: ["LandID"],
+                      where:
+                        "Type_Land  =" +
+                        type +
+                        "and DrectorateID =" +
+                        JSON.parse(Dirctorate).attributes["OBJECTID_1"],
+                      returnGeometry: true,
+                    }
+                  )
+                  .then(function (results) {
+                    results.features.forEach(function (feature) {
+                      highlightSelection(feature);
+                    });
+                  });
+              }
+            } else {
               query
                 .executeQueryJSON(
-                  "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/10",
+                  "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/11",
                   {
-                    outFields: ["DirectorateID"],
+                    outFields: ["LandID"],
                     where:
-                      "GovernmentID =" +
-                      result.features[0].attributes.GovernmentID,
+                      "Type_Land  =" +
+                      type +
+                      "and DrectorateID =" +
+                      JSON.parse(Dirctorate).attributes["OBJECTID_1"],
+                    returnGeometry: true,
                   }
                 )
-                .then((results) => {
-                  results.features.forEach((element) => {
-                    Dirctorate = element.attributes.DirectorateID;
-                    query
-                      .executeQueryJSON(
-                        "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/11",
-                        {
-                          outFields: ["*"],
-                          where:
-                            "Type_Land  =" +
-                            type +
-                            " and DirectorateID =" +
-                            Dirctorate,
-                          returnGeometry: true,
-                        }
-                      )
-                      .then(
-                        function (points) {
-                          if (points.features.length) {
-                            view.goTo(result.features[0].geometry.extent);
-                            points.features.forEach(function (feature) {
-                              highlightSelectionpoint(feature);
-                            });
-                          } else {
-                            highlightSelection(result.features[0]);
-                            console.log("No features selected");
-                          }
-                        },
-                        () => {
-                          highlightSelection(result.features[0]);
-                          console.log("No features selected");
-                        }
-                      );
+                .then(function (results) {
+                  results.features.forEach(function (feature) {
+                    highlightSelection(feature);
                   });
                 });
-            } else highlightSelection(result.features[0]);
-          });
+            }
+            view.goTo(
+              highlightSelection(JSON.parse(Dirctorate), 0).geometry.extent
+            );
+          } else {
+            view.goTo(
+              highlightSelection(JSON.parse(Dirctorate)).geometry.extent
+            );
+          }
+        } else {
+          view.goTo(highlightSelection(JSON.parse(Goverment)).geometry.extent);
+        }
       } else {
         console.log("No government selected");
       }
