@@ -26,8 +26,9 @@ function modelProduct() {
     //variables
     let Governments = new Object(),
       Directorates = new Object(),
-      Lands = new Object(),
       Products = new Object(),
+      Lands = new Object(),
+      Products_lands = [],
       Directorates_Lands = [],
       Goverment_id,
       point;
@@ -189,7 +190,8 @@ function modelProduct() {
     }
 
     //? products
-    async function displayProducts() {
+    async function displayProducts(ProductObject) {
+      Products = new Object();
       await query
         .executeQueryJSON(
           "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/30",
@@ -199,15 +201,30 @@ function modelProduct() {
           }
         )
         .then(function (result) {
+          console.log(result);
+
           result.features.forEach((element) => {
-            Products[element.attributes.Product_VegetarianID] =
+            Products_lands[element.attributes.Product_VegetarianID] =
               element.attributes.Product_Vegetarian_Name;
           });
         });
+
+      for (let i = 0; i < ProductObject.length; i++) {
+        for (const key in Products_lands) {
+          const value = Products_lands[key];
+          if (ProductObject[i] == key) {
+            Products[key] = value;
+          }
+        }
+      }
+
+      //first is null for the zoom
+      // selectedDir.empty();
       var optionSelectProduct = document.createElement("option");
       optionSelectProduct.value = "default";
       optionSelectProduct.text = "";
       selectedProduct.appendChild(optionSelectProduct);
+      // the rest
       for (let key in Products) {
         var optionSelectProduct = document.createElement("option");
         optionSelectProduct.value = key;
@@ -361,7 +378,7 @@ function modelProduct() {
     selectedProduct.hidden = true;
     selectedProduct.style.direction = "rtl";
     selectedProduct.classList.add("form-control");
-    selectedLand.addEventListener("change", function (e) {
+    selectedLand.addEventListener("change", async function (e) {
       type = selectedLand.options[selectedLand.selectedIndex].value;
       console.log(type);
       if (type == 0) {
@@ -374,7 +391,7 @@ function modelProduct() {
         Type_Land = selectedLand.options[selectedLand.selectedIndex].value;
         if (e) {
           productofselected = [];
-          query
+          x = await query
             .executeQueryJSON(
               "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/11",
               {
@@ -383,8 +400,8 @@ function modelProduct() {
               }
             )
             .then(function (results) {
-              results.features.forEach(function (feature) {
-                query
+              results.features.forEach(async function (feature) {
+                x = await query
                   .executeQueryJSON(
                     "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/33",
                     {
@@ -394,22 +411,17 @@ function modelProduct() {
                   )
                   .then(function (results) {
                     results.features.forEach(function (feature) {
-                      point = 0;
-
                       if (productofselected.length) {
+                        point = 0;
                         for (
                           let index = 0;
                           index < productofselected.length;
                           index++
                         ) {
                           const element = productofselected[index];
-
                           if (
                             feature.attributes.Product_VegetarianID == element
                           ) {
-                            productofselected.push(
-                              feature.attributes.Product_VegetarianID
-                            );
                             point++;
                           }
                         }
@@ -424,17 +436,13 @@ function modelProduct() {
                         );
                       }
                     });
-                    console.log(productofselected);
                   });
               });
-              // console.log(results);
-              // console.log(results.features);
-              // displayLands(results.features);
             });
+          displayProducts(productofselected);
         }
       }
     });
-    displayProducts();
     //ending of building label Product  with list
 
     //begining of building display button
