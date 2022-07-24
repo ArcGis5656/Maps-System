@@ -488,7 +488,36 @@ function modelProduct() {
               let select4 = document.getElementById("product");
               var product = select4.options[select4.selectedIndex].value;
               if (product != "default") {
-                console.log("Product: " + product);
+                // console.log("Product: " + product);
+                query
+                  .executeQueryJSON(
+                    "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/33",
+                    {
+                      outFields: ["*"],
+                      where: "Product_VegetarianID = " + product,
+                    }
+                  )
+                  .then((lands) => {
+                    // console.log(lands);
+                    lands.features.forEach((feature) => {
+                      landID = feature.attributes.LandID;
+                      // console.log(landID);  
+                      query
+                        .executeQueryJSON(
+                          "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/11",
+                          {
+                            outFields: ["LandID"],
+                            where: "OBJECTID =" + landID,
+                            returnGeometry: true,
+                          }
+                        )
+                        .then(function (results) {
+                          results.features.forEach(function (feature) {
+                            highlightSelection(feature);
+                          });
+                        });
+                    });
+                  });
               } else {
                 query
                   .executeQueryJSON(
