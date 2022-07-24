@@ -728,8 +728,13 @@ function modelProduct() {
       content: legend,
     });
 
+    const home = document.getElementById("home");
+    const list = document.getElementById("list");
+
     // Add widgets to the view
     view.ui.add(legendExpand, "bottom-right");
+    view.ui.add(home, "top-right");
+    view.ui.add(list, "top-right");
     /*****************************************************************
      *! the point queries
      *****************************************************************/

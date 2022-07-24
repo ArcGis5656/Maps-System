@@ -304,16 +304,16 @@ function modelCenter() {
             }
           });
         console.log(averageOfSelling);
-        let i = 0;
-        async function printArrayOfSelling(i, averageOfSelling) {
-          for await (const element of averageOfSelling) {
-            console.log(element);
-            i++;
-          }
+        console.log(Object.keys(averageOfSelling));
+        // let i = 0;
+        // async function printArrayOfSelling(i, averageOfSelling) {
+        for (const element of averageOfSelling) {
+          console.log(element);
+          i++;
+        }
           console.log(Array.from(averageOfSelling));
-        };
-        printArrayOfSelling(i, averageOfSelling)
-        console.log( Object.entries(averageOfSelling));
+        // };
+        // printArrayOfSelling(i, averageOfSelling)
       } catch (e) {
         console.log(e);
       }
@@ -341,7 +341,7 @@ function modelCenter() {
           if (results[objectId]) {
             for await (const element of results[objectId].features) {
               // results[objectId].features.forEach((element) => {
-           await callback(element, objectId);
+              await callback(element, objectId);
             }
           }
         });
@@ -728,8 +728,13 @@ function modelCenter() {
       content: legend,
     });
 
+    const home = document.getElementById("home");
+    const list = document.getElementById("list");
+
     // Add widgets to the view
     view.ui.add(legendExpand, "bottom-right");
+    view.ui.add(home, "top-right");
+    view.ui.add(list, "top-right");
     /*****************************************************************
      *! the point queries
      *****************************************************************/
