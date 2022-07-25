@@ -373,7 +373,7 @@ function modelCenter() {
     var GovernmentLayer = new FeatureLayer({
       url: "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/9",
       id: "Governments",
-      visible: true,
+      visible: false,
       outFields: ["Government_Name_Arabic", "GovernmentID"],
       popupTemplate: {
         title: "محافظة {Government_Name_Arabic} ",
@@ -476,7 +476,7 @@ function modelCenter() {
         })
         .then((objectId) => {
           product = new Object();
-          flag=0;
+          flag = 0;
           return AssociationsLayer.queryRelatedFeatures({
             outFields: ["*"],
             relationshipId: AssociationsLayer.relationships[1].id,
@@ -749,7 +749,7 @@ function modelCenter() {
                   key +
                   '</th><td class="esri-feature-fields__field-data"> ' +
                   product[key] +
-                  " %</td></tr></tbody></table></div>"
+                  "</td></tr></tbody></table></div>"
                 );
               },
             });
@@ -758,5 +758,3 @@ function modelCenter() {
     });
   });
 }
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
