@@ -533,7 +533,7 @@ function modelAnimal() {
     var GovernmentLayer = new FeatureLayer({
       url: "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/9",
       id: "Governments",
-      visible: true,
+      visible: false,
       outFields: ["Government_Name_Arabic", "GovernmentID"],
       popupTemplate: {
         title: "محافظة {Government_Name_Arabic} ",
@@ -635,7 +635,7 @@ function modelAnimal() {
         })
         .then((objectId) => {
           // console.log(objectId);
-          Pandemic = "";
+          Pandemic = "لايوجد";
           //Pandemic
           return AnimalsLayer.queryRelatedFeatures({
             outFields: ["*"],
