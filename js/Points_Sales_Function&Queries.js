@@ -31,7 +31,7 @@ function modelCenter() {
       async function displayGovernments() {
         await query
           .executeQueryJSON(
-            "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/9",
+            "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/9",
             {
               outFields: ["Government_Name_Arabic", "GovernmentID"],
               where: "1=1",
@@ -59,7 +59,7 @@ function modelCenter() {
 
         await query
           .executeQueryJSON(
-            "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/6",
+            "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/6",
             {
               outFields: ["DirectorateID"],
               where: "1=1",
@@ -163,7 +163,7 @@ function modelCenter() {
         if (event) {
           query
             .executeQueryJSON(
-              "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/10",
+              "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/10",
               {
                 // autocasts as new Query()
                 outFields: ["*"],
@@ -199,7 +199,7 @@ function modelCenter() {
         if (Dirctorate == "default") {
           query
             .executeQueryJSON(
-              "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/9",
+              "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/9",
               {
                 outFields: ["Government_Name_Arabic", "GovernmentID"],
                 where: "GovernmentID =" + Goverment,
@@ -212,7 +212,7 @@ function modelCenter() {
         } else {
           query
             .executeQueryJSON(
-              "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/10",
+              "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/10",
               {
                 outFields: ["Directorate_Name_Arabic", "DirectorateID"],
                 where: "DirectorateID  =" + Dirctorate,
@@ -279,16 +279,17 @@ function modelCenter() {
     //variables
     let government,
       DirectorateID,
-      phones = [];
+      phones = [],
+      Labs_Workshops_Renderer;
 
     //functions
     //? renderering
     async function Renderer() {
       try {
         averageOfSelling = new Object();
-        await query
+        x = await query
           .executeQueryJSON(
-            "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/6",
+            "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/6",
             {
               outFields: ["OBJECTID"],
               where: "1=1",
@@ -303,17 +304,87 @@ function modelCenter() {
               await displayProduct_Manufacturer(objectId, ProductM);
             }
           });
-        console.log(averageOfSelling);
-        console.log(Object.keys(averageOfSelling));
-        // let i = 0;
-        // async function printArrayOfSelling(i, averageOfSelling) {
-        for (const element of averageOfSelling) {
-          console.log(element);
-          i++;
+        for (const key in averageOfSelling) {
+          const element = averageOfSelling[key];
+          // console.log(key + "=\n" + element);
+          // console.log(element.length);
+          sum = 0;
+          for (const value in element) {
+            // console.log(element[value][1]);
+            sum += Number.parseFloat(element[value][1]);
+          }
+          // console.log("sum = " + sum);
+          average = (sum / element.length).toFixed(2);
+          // console.log("average =" + average);
+          averageOfSelling[key].push(["average", average]);
+          // console.log("averageOfSelling =\n " + averageOfSelling[key]);
         }
-          console.log(Array.from(averageOfSelling));
-        // };
-        // printArrayOfSelling(i, averageOfSelling)
+
+        PointsSalesLayer = new FeatureLayer({
+          url: "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/6",
+          id: "Points_Sales",
+          visible: true,
+          outFields: ["*"],
+          renderer: Labs_Workshops_Renderer,
+        });
+        // renderer the workshopsLayer
+        PointsSalesLayer.popupTemplate.expressionInfos.push({
+          name: "average",
+          title: "متوسط كمية البيع",
+          expression: average,
+        });
+        Labs_Workshops_Renderer = {
+          type: "unique-value", // autocasts as new UniqueValueRenderer()
+
+          defaultSymbol: { type: "simple-marker" }, // autocasts as new SimpleFillSymbol()
+          visualVariables: [
+            {
+              type: "color",
+              normalizationField: "average",
+              legendOptions: {
+                title: "متوسط كمية البيع",
+              },
+              stops: [
+                {
+                  value: 0,
+                  color: "yellow",
+                  label: "=0%",
+                },
+                {
+                  value: 0.99,
+                  color: "orange",
+                  label: "<= 99% & >0%",
+                },
+                {
+                  value: 1,
+                  color: "red",
+                  label: "=100%",
+                },
+              ],
+            },
+            {
+              type: "size",
+              normalizationField: "average",
+              stops: [
+                {
+                  value: 0,
+                  size: 12,
+                  label: "=0%",
+                },
+                {
+                  value: 0.99,
+                  size: 9,
+                  label: "<= 99% & >0%",
+                },
+                {
+                  value: 1,
+                  size: 7,
+                  label: "=100%",
+                },
+              ],
+            },
+          ],
+        };
       } catch (e) {
         console.log(e);
       }
@@ -353,7 +424,7 @@ function modelCenter() {
     async function displayProductM(element) {
       await query
         .executeQueryJSON(
-          "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/29",
+          "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/29",
           {
             outFields: ["*"],
             where:
@@ -394,7 +465,7 @@ function modelCenter() {
       try {
         await query
           .executeQueryJSON(
-            "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/29",
+            "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/29",
             {
               outFields: ["*"],
               where:
@@ -472,7 +543,7 @@ function modelCenter() {
     async function displayProductV(element) {
       await query
         .executeQueryJSON(
-          "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/30",
+          "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/30",
           {
             outFields: ["*"],
             where: "OBJECTID  = " + element.attributes["Product_VegetarianID"],
@@ -516,7 +587,7 @@ function modelCenter() {
       try {
         await query
           .executeQueryJSON(
-            "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/30",
+            "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/30",
             {
               outFields: ["*"],
               where:
@@ -568,62 +639,6 @@ function modelCenter() {
       }
     }
 
-    // renderer the workshopsLayer
-    // const Labs_Workshops_Renderer = {
-    //   type: "unique-value", // autocasts as new UniqueValueRenderer()
-    //   field: "Actual_Power",
-    //   defaultSymbol: { type: "simple-marker" }, // autocasts as new SimpleFillSymbol()
-    //   visualVariables: [
-    //     {
-    //       type: "color",
-    //       field: "Actual_Power",
-    //       normalizationField: "Maximum_Power",
-    //       legendOptions: {
-    //         title: "% الطاقة الغير مستغلة",
-    //       },
-    //       stops: [
-    //         {
-    //           value: 0,
-    //           color: "yellow",
-
-    //           label: "=0%",
-    //         },
-    //         {
-    //           value: 0.99,
-    //           color: "orange",
-    //           label: "<= 99% & >0%",
-    //         },
-    //         {
-    //           value: 1,
-    //           color: "red",
-    //           label: "=100%",
-    //         },
-    //       ],
-    //     },
-    //     {
-    //       type: "size",
-    //       field: "Actual_Power",
-    //       normalizationField: "Maximum_Power",
-    //       stops: [
-    //         {
-    //           value: 0,
-    //           size: 12,
-    //           label: "=0%",
-    //         },
-    //         {
-    //           value: 0.99,
-    //           size: 9,
-    //           label: "<= 99% & >0%",
-    //         },
-    //         {
-    //           value: 1,
-    //           size: 7,
-    //           label: "=100%",
-    //         },
-    //       ],
-    //     },
-    //   ],
-    // };
     //Highlight the selected feature
     const highlightSelection = (feature) => {
       view.graphics.removeAll();
@@ -655,7 +670,7 @@ function modelCenter() {
       } else view.goTo(this.mapExtent);
     };
     var GovernmentLayer = new FeatureLayer({
-      url: "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/9",
+      url: "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/9",
       id: "Governments",
       visible: true,
       outFields: ["Government_Name_Arabic", "GovernmentID"],
@@ -664,7 +679,7 @@ function modelCenter() {
       },
     });
     var DirectorateLayer = new FeatureLayer({
-      url: "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/10",
+      url: "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/10",
       id: "Directorates",
       visible: true,
       outFields: ["Directorate_Name_Arabic", "DirectorateID"],
@@ -673,11 +688,11 @@ function modelCenter() {
       },
     });
     var PointsSalesLayer = new FeatureLayer({
-      url: "https://192.168.56.56:6443/arcgis/rest/services/DBofMaps/MapServer/6",
+      url: "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/6",
       id: "Points_Sales",
       visible: true,
       outFields: ["*"],
-      // renderer: Labs_Workshops_Renderer,
+      renderer: Labs_Workshops_Renderer,
     });
     /*****************************************************************
      *! Layers may be added to the map in the map's constructor
@@ -813,13 +828,7 @@ function modelCenter() {
               async function popupTemplate() {
                 PointsSalesLayer.popupTemplate = {
                   title: "{Workshop_Name}",
-                  // expressionInfos: [
-                  //   {
-                  //     name: "Unused Energy",
-                  //     title: "الطاقة الغير مستغلة",
-                  //     expression: "$feature.Maximum_Power - $feature.Actual_Power",
-                  //   },
-                  // ],
+
                   content: [
                     {
                       type: "fields",
