@@ -116,9 +116,9 @@ function modelAnimal() {
         selectedDir.appendChild(optionSelectDir);
       }
     }
-
-    //? Animal types
-    async function displayAnimals() {
+    //? Lands types
+    async function displayAnimals(AnimalObject) {
+      TypeAnimal = new Object();
       await query
         .executeQueryJSON(
           "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/7",
@@ -132,11 +132,32 @@ function modelAnimal() {
             Animals[element.attributes.Type] = element.attributes.Type;
           });
         });
+      for (let i = 0; i < AnimalObject.length; i++) {
+        for (let j = 0; j < Animals.length; j++) {
+          if (AnimalObject[i].attributes.Type === Animals[j]) {
+            if (Object.keys(TypeAnimal).length) {
+              for (let z = 0; z < Object.keys(TypeAnimal).length; z++) {
+                if (Animals[j] !== TypeAnimal[z]) {
+                  TypeAnimal[AnimalObject[i].attributes.Type] =
+                    AnimalObject[i].attributes.Type;
+                } else {
+                  // console.log("found it in directorates");
+                }
+              }
+            } else {
+              TypeAnimal[AnimalObject[i].attributes.Type] =
+                AnimalObject[i].attributes.Type;
+            }
+          }
+        }
+      }
+      // console.log(Lands);
       //first is null for the zoom
-      // selectedAnimal.empty();
+      // selectedLand.empty();
       let optionSelectAnimal = document.createElement("option");
       optionSelectAnimal.value = "default";
       optionSelectAnimal.text = "";
+      optionSelectAnimal.selected = true;
       selectedAnimal.appendChild(optionSelectAnimal);
       // the rest
       for (let key in Animals) {
@@ -154,13 +175,56 @@ function modelAnimal() {
             Animals[key] = "الجمال";
             break;
         }
-
         let optionSelectAnimal = document.createElement("option");
         optionSelectAnimal.value = key;
         optionSelectAnimal.text = Animals[key];
         selectedAnimal.appendChild(optionSelectAnimal);
       }
     }
+    //? Animal types
+    // async function displayAnimals() {
+    //   await query
+    //     .executeQueryJSON(
+    //       "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/7",
+    //       {
+    //         outFields: ["*"],
+    //         where: "1=1",
+    //       }
+    //     )
+    //     .then(function (result) {
+    //       result.features.forEach((element) => {
+    //         Animals[element.attributes.Type] = element.attributes.Type;
+    //       });
+    //     });
+    //   //first is null for the zoom
+    //   // selectedAnimal.empty();
+    //   let optionSelectAnimal = document.createElement("option");
+    //   optionSelectAnimal.value = "default";
+    //   optionSelectAnimal.text = "";
+    //   selectedAnimal.appendChild(optionSelectAnimal);
+    //   // the rest
+    //   for (let key in Animals) {
+    //     switch (Animals[key]) {
+    //       case 0:
+    //         Animals[key] = "الاغنام";
+    //         break;
+    //       case 1:
+    //         Animals[key] = "الماعز";
+    //         break;
+    //       case 2:
+    //         Animals[key] = "الابقار";
+    //         break;
+    //       case 3:
+    //         Animals[key] = "الجمال";
+    //         break;
+    //     }
+
+    //     let optionSelectAnimal = document.createElement("option");
+    //     optionSelectAnimal.value = key;
+    //     optionSelectAnimal.text = Animals[key];
+    //     selectedAnimal.appendChild(optionSelectAnimal);
+    //   }
+    // }
     /*****************************************************************
      *! function building
      *****************************************************************/
@@ -240,7 +304,31 @@ function modelAnimal() {
     selectedAnimal.setAttribute("id", "type");
     selectedAnimal.style.direction = "rtl";
     selectedAnimal.classList.add("form-control");
-    displayAnimals();
+    selectedDir.addEventListener("change", function (e) {
+      var length = selectedAnimal.options.length;
+      for (i = length - 1; i >= 0; i--) {
+        selectedAnimal.options[i] = null;
+      }
+
+      Drectorate_id = selectedDir.options[selectedDir.selectedIndex].value;
+      // console.log("Drectorate_id: " + Drectorate_id);
+      if (e) {
+        query
+          .executeQueryJSON(
+            "https://192.168.56.56:6443/arcgis/rest/services/MapsDB/MapServer/7",
+            {
+              // autocasts as new Query()
+              outFields: ["*"],
+              where: "DirectorateID  =" + Drectorate_id,
+            }
+          )
+          .then(function (results) {
+            // console.log(results);
+            displayAnimals(results.features);
+          });
+      }
+    });
+    // displayAnimals();
     //ending of building label Animal with list
 
     //begining of building display button
@@ -527,7 +615,7 @@ function modelAnimal() {
         geometry: point,
         symbol: simpleMarkerSymbol,
       });
-      console.log(pointGraphic);
+      // console.log(pointGraphic);
       view.graphics.add(pointGraphic);
     };
     var GovernmentLayer = new FeatureLayer({
